@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCM Chapter Checklist (11th & 12th)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .tab-button.active {
+            background: rgba(255, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-custom:hover {
+            transform: scale(1.2);
+        }
+        
+        .checkbox-custom:checked {
+            animation: pulse 0.3s ease;
+        }
+        
+        tr {
+            transition: all 0.3s ease;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.01);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 1000;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .reset-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .watermark {
+                font-size: 10px;
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="watermark">made by KesHav</div>
+    
+    <div class="max-w-7xl mx-auto animate-fadeIn">
+        <!-- Header -->
+        <div class="glass-strong rounded-2xl p-6 md:p-8 mb-6 text-center animate-slideIn">
+            <h1 class="text-3xl md:text-5xl font-bold text-white mb-2">📚 PCM Chapter Checklist</h1>
+            <p class="text-white text-sm md:text-lg opacity-90">Track your progress for Class 11th & 12th</p>
+        </div>
+        
+        <!-- Tab Buttons -->
+        <div class="glass rounded-2xl p-4 mb-6">
+            <div class="flex flex-col md:flex-row gap-3 justify-center">
+                <button onclick="switchTab('physics')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold active" id="tab-physics">
+                    ⚛️ Physics
+                </button>
+                <button onclick="switchTab('chemistry')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold" id="tab-chemistry">
+                    🧪 Chemistry
+                </button>
+                <button onclick="switchTab('maths')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold" id="tab-maths">
+                    📐 Mathematics
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reset Button -->
+        <div class="text-center mb-6">
+            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">
+                🔄 Reset All Progress
+            </button>
+        </div>
+        
+        <!-- Content Areas -->
+        <div id="physics-content" class="content-area">
+            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Physics - Class 11th</h2>
+                    <div class="text-white font-semibold" id="physics-11-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-green-500 h-3 rounded-full" id="physics-11-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="physics-11-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Physics - Class 12th</h2>
+                    <div class="text-white font-semibold" id="physics-12-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-green-500 h-3 rounded-full" id="physics-12-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="physics-12-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="chemistry-content" class="content-area hidden">
+            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Chemistry - Class 11th</h2>
+                    <div class="text-white font-semibold" id="chemistry-11-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-blue-500 h-3 rounded-full" id="chemistry-11-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chemistry-11-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Chemistry - Class 12th</h2>
+                    <div class="text-white font-semibold" id="chemistry-12-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-blue-500 h-3 rounded-full" id="chemistry-12-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chemistry-12-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="maths-content" class="content-area hidden">
+            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Mathematics - Class 11th</h2>
+                    <div class="text-white font-semibold" id="maths-11-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-purple-500 h-3 rounded-full" id="maths-11-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maths-11-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="glass rounded-2xl p-6 animate-fadeIn">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Mathematics - Class 12th</h2>
+                    <div class="text-white font-semibold" id="maths-12-progress">0%</div>
+                </div>
+                <div class="w-full bg-gray-300 rounded-full h-3 mb-4">
+                    <div class="progress-bar bg-purple-500 h-3 rounded-full" id="maths-12-bar" style="width: 0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maths-12-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const chapters = {
+            physics: {
+                11: [
+                    "Physical World",
+                    "Units and Measurements",
+                    "Motion in a Straight Line",
+                    "Motion in a Plane",
+                    "Laws of Motion",
+                    "Work, Energy and Power",
+                    "System of Particles and Rotational Motion",
+                    "Gravitation",
+                    "Mechanical Properties of Solids",
+                    "Mechanical Properties of Fluids",
+                    "Thermal Properties of Matter",
+                    "Thermodynamics",
+                    "Kinetic Theory",
+                    "Oscillations",
+                    "Waves"
+                ],
+                12: [
+                    "Electric Charges and Fields",
+                    "Electrostatic Potential and Capacitance",
+                    "Current Electricity",
+                    "Moving Charges and Magnetism",
+                    "Magnetism and Matter",
+                    "Electromagnetic Induction",
+                    "Alternating Current",
+                    "Electromagnetic Waves",
+                    "Ray Optics and Optical Instruments",
+                    "Wave Optics",
+                    "Dual Nature of Radiation and Matter",
+                    "Atoms",
+                    "Nuclei",
+                    "Semiconductor Electronics"
+                ]
+            },
+            chemistry: {
+                11: [
+                    "Some Basic Concepts of Chemistry",
+                    "Structure of Atom",
+                    "Classification of Elements and Periodicity in Properties",
+                    "Chemical Bonding and Molecular Structure",
+                    "States of Matter",
+                    "Thermodynamics",
+                    "Equilibrium",
+                    "Redox Reactions",
+                    "Hydrogen",
+                    "The s-Block Elements",
+                    "The p-Block Elements (Group 13 & 14)",
+                    "Organic Chemistry: Some Basic Principles and Techniques",
+                    "Hydrocarbons",
+                    "Environmental Chemistry"
+                ],
+                12: [
+                    "The Solid State",
+                    "Solutions",
+                    "Electrochemistry",
+                    "Chemical Kinetics",
+                    "Surface Chemistry",
+                    "General Principles and Processes of Isolation of Elements",
+                    "The p-Block Elements (Group 15, 16, 17, 18)",
+                    "The d- and f-Block Elements",
+                    "Coordination Compounds",
+                    "Haloalkanes and Haloarenes",
+                    "Alcohols, Phenols and Ethers",
+                    "Aldehydes, Ketones and Carboxylic Acids",
+                    "Amines",
+                    "Biomolecules",
+                    "Polymers",
+                    "Chemistry in Everyday Life"
+                ]
+            },
+            maths: {
+                11: [
+                    "Sets",
+                    "Relations and Functions",
+                    "Trigonometric Functions",
+                    "Principle of Mathematical Induction",
+                    "Complex Numbers and Quadratic Equations",
+                    "Linear Inequalities",
+                    "Permutations and Combinations",
+                    "Binomial Theorem",
+                    "Sequences and Series",
+                    "Straight Lines",
+                    "Conic Sections",
+                    "Introduction to Three Dimensional Geometry",
+                    "Limits and Derivatives",
+                    "Mathematical Reasoning",
+                    "Statistics",
+                    "Probability"
+                ],
+                12: [
+                    "Relations and Functions",
+                    "Inverse Trigonometric Functions",
+                    "Matrices",
+                    "Determinants",
+                    "Continuity and Differentiability",
+                    "Application of Derivatives",
+                    "Integrals",
+                    "Application of Integrals",
+                    "Differential Equations",
+                    "Vector Algebra",
+                    "Three Dimensional Geometry",
+                    "Linear Programming",
+                    "Probability"
+                ]
+            }
+        };
+        
+        function createCheckbox(subject, cls, chapter, type) {
+            const id = `${subject}-${cls}-${chapter}-${type}`;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'checkbox-custom';
+            checkbox.id = id;
+            checkbox.onchange = () => saveProgress(id, checkbox.checked);
+            return checkbox;
+        }
+        
+        function initializeTable(subject, cls) {
+            const tbody = document.getElementById(`${subject}-${cls}-body`);
+            tbody.innerHTML = '';
+            
+            chapters[subject][cls].forEach((chapter, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-white border-opacity-20';
+                row.innerHTML = `
+                    <td class="p-3">${index + 1}. ${chapter}</td>
+                    <td class="text-center p-3"></td>
+                    <td class="text-center p-3"></td>
+                    <td class="text-center p-3"></td>
+                `;
+                
+                const theoryCb = createCheckbox(subject, cls, index, 'theory');
+                const revisionCb = createCheckbox(subject, cls, index, 'revision');
+                const pyqCb = createCheckbox(subject, cls, index, 'pyq');
+                
+                row.cells[1].appendChild(theoryCb);
+                row.cells[2].appendChild(revisionCb);
+                row.cells[3].appendChild(pyqCb);
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        function saveProgress(id, checked) {
+            const data = JSON.parse(localStorage.getItem('pcm-progress') || '{}');
+            data[id] = checked;
+            localStorage.setItem('pcm-progress', JSON.stringify(data));
+            updateProgress();
+        }
+        
+        function loadProgress() {
+            const data = JSON.parse(localStorage.getItem('pcm-progress') || '{}');
+            Object.keys(data).forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.checked = data[id];
+                }
+            });
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            ['physics', 'chemistry', 'maths'].forEach(subject => {
+                [11, 12].forEach(cls => {
+                    const total = chapters[subject][cls].length * 3;
+                    let checked = 0;
+                    
+                    chapters[subject][cls].forEach((_, index) => {
+                        ['theory', 'revision', 'pyq'].forEach(type => {
+                            const id = `${subject}-${cls}-${index}-${type}`;
+                            const checkbox = document.getElementById(id);
+                            if (checkbox && checkbox.checked) checked++;
+                        });
+                    });
+                    
+                    const percentage = Math.round((checked / total) * 100);
+                    document.getElementById(`${subject}-${cls}-progress`).textContent = `${percentage}%`;
+                    document.getElementById(`${subject}-${cls}-bar`).style.width = `${percentage}%`;
+                });
+            });
+        }
+        
+        function switchTab(subject) {
+            document.querySelectorAll('.content-area').forEach(area => area.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`${subject}-content`).classList.remove('hidden');
+            document.getElementById(`tab-${subject}`).classList.add('active');
+        }
+        
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('pcm-progress');
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateProgress();
+            }
+        }
+        
+        // Initialize
+        ['physics', 'chemistry', 'maths'].forEach(subject => {
+            [11, 12].forEach(cls => {
+                initializeTable(subject, cls);
+            });
+        });
+        
+        loadProgress();
+    </script>
+</body>
+</html>
