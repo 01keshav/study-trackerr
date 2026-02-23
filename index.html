@@ -3,656 +3,1868 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCM Chapter Checklist (11th & 12th)
-   </title>
+    <title>Study Tracker — K4hav</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* ============================
+           CSS CUSTOM PROPERTIES (theme)
+           ============================ */
+        :root {
+            --c1: #7c3aed;
+            --c2: #06b6d4;
+            --c1-soft: rgba(124,58,237,0.3);
+            --c2-soft: rgba(6,182,212,0.3);
+            --c1-faint: rgba(124,58,237,0.12);
+            --c2-faint: rgba(6,182,212,0.12);
+            --bg-deep: #0a0118;
+            --bg-mid: #0d1b3e;
+            --text-bright: #e2d9f3;
+            --text-accent: #c4b5fd;
+            --text-accent2: #67e8f9;
+        }
+
+        /* ============================
+           KEYFRAMES
+           ============================ */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity:0; transform:translateY(24px); }
+            to   { opacity:1; transform:translateY(0); }
         }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        @keyframes float {
+            0%,100% { transform:translateY(0px); }
+            50%     { transform:translateY(-12px); }
         }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes shine {
+            0%   { left:-120%; }
+            100% { left:220%; }
         }
-        
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        @keyframes orbFloat1 {
+            0%,100% { transform:translate(0,0) scale(1); }
+            25%     { transform:translate(80px,-100px) scale(1.2); }
+            50%     { transform:translate(120px,60px) scale(0.9); }
+            75%     { transform:translate(-60px,80px) scale(1.1); }
+        }
+        @keyframes orbFloat2 {
+            0%,100% { transform:translate(0,0) scale(1); }
+            25%     { transform:translate(-90px,70px) scale(1.25); }
+            50%     { transform:translate(60px,-50px) scale(0.85); }
+            75%     { transform:translate(100px,100px) scale(1.1); }
+        }
+        @keyframes orbFloat3 {
+            0%,100% { transform:translate(-50%,-50%) scale(1); }
+            33%     { transform:translate(calc(-50% + 80px),calc(-50% - 60px)) scale(1.2); }
+            66%     { transform:translate(calc(-50% - 80px),calc(-50% + 60px)) scale(0.85); }
+        }
+        @keyframes orbFloat4 {
+            0%,100% { transform:translate(0,0) rotate(0deg); }
+            50%     { transform:translate(-80px,60px) rotate(180deg); }
+        }
+        @keyframes orbFloat5 {
+            0%,100% { transform:translate(0,0) scale(1); }
+            50%     { transform:translate(60px,-80px) scale(1.3); }
+        }
+        @keyframes neonPulse {
+            0%,100% { box-shadow: 0 0 8px var(--c1), 0 0 24px var(--c1-soft), 0 0 50px var(--c1-faint); }
+            50%     { box-shadow: 0 0 16px var(--c2), 0 0 40px var(--c2-soft), 0 0 80px var(--c2-faint); }
+        }
+        @keyframes borderGlow {
+            0%,100% { border-color: var(--c1-soft); }
+            50%     { border-color: rgba(6,182,212,0.5); }
+        }
+        @keyframes titleShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 200%; }
+        @keyframes progressShine {
+            0%   { left:-100%; }
+            100% { left:200%; }
         }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        @keyframes cardHoverGlow {
+            0%,100% { box-shadow:0 12px 40px var(--c1-soft); }
+            50%     { box-shadow:0 12px 40px var(--c2-soft); }
         }
-        
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-            50% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.4); }
+        @keyframes particleDrift {
+            0%   { transform:translateY(100vh) translateX(0px) scale(0); opacity:0; }
+            10%  { opacity:1; }
+            90%  { opacity:1; }
+            100% { transform:translateY(-100px) translateX(var(--dx,30px)) scale(1); opacity:0; }
         }
-        
+        @keyframes starTwinkle {
+            0%,100% { opacity:0.1; transform:scale(0.8); }
+            50%     { opacity:1; transform:scale(1.2); }
+        }
+        @keyframes rippleOut {
+            0%   { transform:translate(-50%,-50%) scale(0); opacity:0.8; }
+            100% { transform:translate(-50%,-50%) scale(6); opacity:0; }
+        }
+        @keyframes themeLabel {
+            0%,80%  { opacity:1; transform:translateY(0); }
+            100%    { opacity:0; transform:translateY(-20px); }
+        }
+        @keyframes mouseCursor {
+            0%,100% { transform:translate(-50%,-50%) scale(1); }
+            50%     { transform:translate(-50%,-50%) scale(1.3); }
+        }
+        @keyframes gridPulse {
+            0%,100% { opacity:0.03; }
+            50%     { opacity:0.07; }
+        }
+
+        /* ============================
+           BASE
+           ============================ */
+        *, *::before, *::after { box-sizing:border-box; }
         body {
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            min-height: 100vh;
-            overflow-x: hidden;
+            margin:0;
+            min-height:100vh;
+            overflow-x:hidden;
+            background:var(--bg-deep);
+            font-family:'Segoe UI', system-ui, sans-serif;
+            transition: background 2s ease;
         }
-        
+
+        /* ============================
+           ANIMATED BG CANVAS
+           ============================ */
+        .bg-canvas {
+            position:fixed; inset:0; z-index:0; overflow:hidden;
+            transition: background 2s ease;
+        }
+        /* animated grid */
+        .bg-grid {
+            position:absolute; inset:0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+        .orb {
+            position:absolute; border-radius:50%;
+            filter:blur(90px); opacity:0.5; pointer-events:none;
+            transition: background 2s ease, width 2s, height 2s;
+        }
+        .orb-1 { width:550px; height:550px; top:-120px; left:-120px; animation:orbFloat1 14s ease-in-out infinite; }
+        .orb-2 { width:450px; height:450px; bottom:-100px; right:-100px; animation:orbFloat2 17s ease-in-out infinite; }
+        .orb-3 { width:320px; height:320px; top:40%; left:50%; animation:orbFloat3 20s ease-in-out infinite; opacity:0.35; }
+        .orb-4 { width:220px; height:220px; top:15%; right:10%; animation:orbFloat4 22s ease-in-out infinite; opacity:0.28; }
+        .orb-5 { width:180px; height:180px; bottom:20%; left:10%; animation:orbFloat5 16s ease-in-out infinite; opacity:0.3; }
+
+        /* scanlines */
+        .scanline {
+            position:fixed; inset:0; z-index:1; pointer-events:none;
+            background:repeating-linear-gradient(
+                to bottom, transparent 0px, transparent 3px,
+                rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px
+            );
+        }
+
+        /* mouse glow follower */
+        #mouse-glow {
+            position:fixed; width:400px; height:400px;
+            border-radius:50%; pointer-events:none; z-index:1;
+            transform:translate(-50%,-50%);
+            background: radial-gradient(circle, var(--c1-faint) 0%, transparent 70%);
+            transition: left 0.1s, top 0.1s, background 2s;
+            filter:blur(20px);
+        }
+
+        /* particles canvas */
+        #particle-canvas { position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+        /* theme label toast */
+        #theme-toast {
+            position:fixed; top:20px; right:20px; z-index:999;
+            padding:8px 18px; border-radius:20px;
+            font-size:13px; font-weight:600; letter-spacing:0.05em;
+            backdrop-filter:blur(12px);
+            border:1px solid rgba(255,255,255,0.2);
+            color:white; pointer-events:none;
+            opacity:0; transition: opacity 0.3s;
+        }
+        #theme-toast.show { animation: themeLabel 2.5s ease forwards; }
+
+        /* theme dots indicator */
+        #theme-dots {
+            position:fixed; bottom:48px; right:20px; z-index:999;
+            display:flex; gap:6px; align-items:center;
+        }
+        .theme-dot {
+            width:8px; height:8px; border-radius:50%;
+            cursor:pointer; transition:all 0.3s;
+            opacity:0.4; border:1px solid rgba(255,255,255,0.3);
+        }
+        .theme-dot.active { opacity:1; transform:scale(1.4); }
+
+        /* ============================
+           LAYOUT
+           ============================ */
+        .main-wrap { position:relative; z-index:2; }
+
+        /* ============================
+           GLASS
+           ============================ */
         .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            position: relative;
-            overflow: hidden;
+            background:rgba(10,4,30,0.55);
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            border:1px solid var(--c1-soft);
+            box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+            position:relative; overflow:hidden;
+            transition:border-color 2s ease, box-shadow 2s ease;
         }
-        
         .glass::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shine 3s infinite;
+            content:""; position:absolute; top:0; left:-120%;
+            width:60%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);
+            animation:shine 6s ease-in-out infinite; pointer-events:none;
         }
-        
         .glass-strong {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
+            background:rgba(15,5,45,0.72);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border:1px solid var(--c2-soft);
+            box-shadow:0 4px 24px var(--c1-faint), inset 0 1px 0 rgba(255,255,255,0.07);
+            position:relative; overflow:hidden;
+            transition:border-color 2s ease;
         }
-        
         .glass-strong::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shine 4s infinite;
+            content:""; position:absolute; top:0; left:-120%;
+            width:60%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);
+            animation:shine 7s ease-in-out infinite 1.5s; pointer-events:none;
         }
-        
-        .animate-fadeIn {
-            animation: fadeIn 0.6s ease-out;
-        }
-        
-        .animate-slideIn {
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        .tab-button {
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .tab-button:hover {
-            transform: translateY(-2px);
-            animation: glow 1.5s infinite;
-        }
-        
-        .tab-button.active {
-            background: rgba(255, 255, 255, 0.3);
-            animation: pulse 2s infinite, glow 2s infinite;
-        }
-        
-        .checkbox-custom {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .checkbox-custom:hover {
-            transform: scale(1.2);
-        }
-        
-        .checkbox-custom:checked {
-            animation: pulse 0.3s ease;
-        }
-        
-        tr {
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        tr:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.01) translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        tr::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        tr:hover::after {
-            opacity: 1;
-        }
-        
-        .progress-bar {
-            transition: width 0.5s ease;
-        }
-        
-        .watermark {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.4);
-            z-index: 1000;
-            pointer-events: none;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        
+
+        /* ============================
+           TITLE
+           ============================ */
         h1 {
-            animation: float 4s ease-in-out infinite;
+            animation:float 5s ease-in-out infinite;
+            background:linear-gradient(270deg, var(--c1), var(--c2), var(--c1), var(--c2));
+            background-size:400% 400%;
+            animation: float 5s ease-in-out infinite, titleShift 6s ease infinite;
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            filter: drop-shadow(0 0 20px var(--c1-soft));
         }
-        
-        .progress-container {
-            position: relative;
-            overflow: hidden;
+
+        /* ============================
+           BUTTONS
+           ============================ */
+        .tab-button {
+            transition:all 0.3s ease; position:relative; z-index:1;
+            border:1px solid var(--c1-soft) !important;
+            color:var(--text-accent) !important;
         }
-        
+        .tab-button:hover {
+            transform:translateY(-3px);
+            border-color:var(--c2-soft) !important;
+            box-shadow:0 0 20px var(--c2-faint);
+            color:var(--text-accent2) !important;
+        }
+        .tab-button.active {
+            background:var(--c1-faint) !important;
+            border-color:var(--c1) !important;
+            animation:neonPulse 2s ease-in-out infinite;
+            color:white !important;
+        }
+        .back-btn {
+            transition:all 0.3s ease;
+            border:1px solid var(--c2-soft) !important;
+            color:var(--text-accent2) !important;
+        }
+        .back-btn:hover {
+            transform:translateX(-5px);
+            box-shadow:0 0 16px var(--c2-faint);
+        }
+        .reset-btn {
+            transition:all 0.3s ease;
+            border:1px solid rgba(239,68,68,0.4) !important;
+            color:#fca5a5 !important;
+        }
+        .reset-btn:hover {
+            transform:scale(1.05);
+            box-shadow:0 0 20px rgba(239,68,68,0.3);
+            background:rgba(239,68,68,0.15) !important;
+        }
+
+        /* ============================
+           CARDS
+           ============================ */
+        .subject-card, .skill-card {
+            transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            cursor:pointer;
+            border:1px solid var(--c1-soft);
+        }
+        .subject-card:hover, .skill-card:hover {
+            transform:translateY(-10px) scale(1.04);
+            border-color:var(--c2-soft);
+            animation:cardHoverGlow 2s ease-in-out infinite;
+        }
+
+        /* ripple */
+        .ripple {
+            position:fixed; width:50px; height:50px;
+            border-radius:50%; pointer-events:none; z-index:9999;
+            border:2px solid var(--c2);
+            animation:rippleOut 0.8s ease-out forwards;
+        }
+
+        /* ============================
+           PROGRESS
+           ============================ */
+        .progress-bar { transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+        .progress-container { position:relative; overflow:hidden; }
         .progress-container::after {
+            content:""; position:absolute; top:0; left:-100%;
+            width:100%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+            animation:progressShine 2.5s infinite; pointer-events:none;
+        }
+
+        /* ============================
+           TABLE
+           ============================ */
+        tr { transition:all 0.25s ease; }
+        tr:hover {
+            background:var(--c1-faint);
+            transform:translateX(4px);
+            box-shadow:inset 3px 0 0 var(--c1);
+        }
+
+        /* ============================
+           CHECKBOX
+           ============================ */
+        .checkbox-custom {
+            width:20px; height:20px; cursor:pointer;
+            transition:all 0.3s ease; accent-color:var(--c1);
+        }
+        .checkbox-custom:hover { transform:scale(1.3); }
+
+        /* ============================
+           ROADMAP
+           ============================ */
+        .roadmap-step {
+            border-left:3px solid transparent;
+            border-image:linear-gradient(180deg, var(--c1), var(--c2)) 1;
+            margin-left:20px; padding-left:20px; position:relative;
+        }
+        .roadmap-step::before {
+            content:""; position:absolute; left:-9px; top:8px;
+            width:15px; height:15px; border-radius:50%;
+            background:linear-gradient(135deg, var(--c1), var(--c2));
+            box-shadow:0 0 12px var(--c1);
+        }
+
+        /* ============================
+           FOOTER
+           ============================ */
+        .footer {
+            background:rgba(5,2,20,0.85);
+            backdrop-filter:blur(12px);
+            border-top:1px solid var(--c1-soft);
+            color:var(--text-accent);
+            transition:border-color 2s;
+        }
+
+        /* ============================
+           ADV PYQ COLUMN
+           ============================ */
+        .adv-pyq-cell {
+            position: relative;
+        }
+        .adv-pyq-cell::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: shine 2s infinite;
+            inset: 0;
+            background: rgba(251,191,36,0.04);
+            pointer-events: none;
         }
-        
-        .reset-btn {
-            transition: all 0.3s ease;
-        }
-        
-        .reset-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-        
-        @media (max-width: 768px) {
-            .watermark {
-                font-size: 10px;
-                bottom: 10px;
-                right: 10px;
-            }
-        }
+
+        /* ============================
+           TEXT / MISC
+           ============================ */
+        .text-white { color:var(--text-bright) !important; }
+        .animate-fadeIn { animation:fadeIn 0.6s ease-out; }
+        .page { display:none; }
+        .page.active { display:block; animation:fadeIn 0.5s ease-out; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="watermark">made by KesHav</div>
-    
-    <div class="max-w-7xl mx-auto animate-fadeIn">
+<body class="p-4 md:p-8 pb-16">
+
+    <!-- Animated Background -->
+    <div class="bg-canvas" id="bg-canvas">
+        <div class="bg-grid"></div>
+        <div class="orb orb-1" id="orb1"></div>
+        <div class="orb orb-2" id="orb2"></div>
+        <div class="orb orb-3" id="orb3"></div>
+        <div class="orb orb-4" id="orb4"></div>
+        <div class="orb orb-5" id="orb5"></div>
+    </div>
+    <div class="scanline"></div>
+    <div id="mouse-glow"></div>
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Theme Toast -->
+    <div id="theme-toast"></div>
+
+    <!-- Theme Dots -->
+    <div id="theme-dots"></div>
+
+    <div class="main-wrap">
+
+    <!-- ==================== PAGE: HOME ==================== -->
+    <div id="page-home" class="page active max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="glass-strong rounded-2xl p-6 md:p-8 mb-6 text-center animate-slideIn">
-            <h1 class="text-3xl md:text-5xl font-bold text-white mb-2">📚 PCM Chapter Checklist</h1>
-            <p class="text-white text-sm md:text-lg opacity-90"> Important Notice: A major update will be released soon. We recommend taking a screenshot of your current saved progress, as your saved data may be erased during the update.</p>
+        <div class="glass-strong rounded-2xl p-6 md:p-8 mb-6 text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-2">📚 Study Tracker</h1>
+            <p class="text-sm md:text-lg" style="color:#a5b4fc;opacity:0.9;">Track your progress for Class 11th & 12th — by K4hav</p>
         </div>
-        
-        <!-- Tab Buttons -->
+
+        <!-- Main Navigation Tabs -->
         <div class="glass rounded-2xl p-4 mb-6">
-            <div class="flex flex-col md:flex-row gap-3 justify-center">
-                <button onclick="switchTab('physics')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold active" id="tab-physics">
-                    ⚛️ Physics
-                </button>
-                <button onclick="switchTab('chemistry')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold" id="tab-chemistry">
-                    🧪 Chemistry
-                </button>
-                <button onclick="switchTab('maths')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold" id="tab-maths">
-                    📐 Mathematics
-                </button>
-                <button onclick="switchTab('help')" class="tab-button glass-strong rounded-xl px-6 py-3 text-white font-semibold" id="tab-help">
-                    💬 Help & Support
-                </button>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="showPage('page-stream', 'science')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">🔬 Science</button>
+                <button onclick="showPage('page-stream', 'commerce')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💼 Commerce</button>
+                <button onclick="showPage('page-stream', 'arts')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">🎨 Arts</button>
+                <button onclick="showPage('page-skills', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💡 Skills</button>
+                <button onclick="showPage('page-help', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💬 Help & Support</button>
+                <button onclick="showPage('page-support', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">❤️ Support Us</button>
             </div>
         </div>
-        
-        <!-- Reset Button -->
-        <div class="text-center mb-6">
-            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">
-                🔄 Reset All Progress
-            </button>
-        </div>
-        
-        <!-- Content Areas -->
-        <div id="physics-content" class="content-area">
-            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Physics - Class 11th</h2>
-                    <div class="text-white font-semibold" id="physics-11-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-green-500 h-3 rounded-full" id="physics-11-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="physics-11-body"></tbody>
-                    </table>
-                </div>
+
+        <!-- Welcome Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div onclick="showPage('page-stream','science')" class="subject-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-5xl mb-4">🔬</div>
+                <h3 class="text-white font-bold text-xl mb-2">Science</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">Biology · Mathematics</p>
             </div>
-            
-            <div class="glass rounded-2xl p-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Physics - Class 12th</h2>
-                    <div class="text-white font-semibold" id="physics-12-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-green-500 h-3 rounded-full" id="physics-12-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="physics-12-body"></tbody>
-                    </table>
-                </div>
+            <div onclick="showPage('page-stream','commerce')" class="subject-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-5xl mb-4">💼</div>
+                <h3 class="text-white font-bold text-xl mb-2">Commerce</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">Accountancy · Business Studies · Economics</p>
+            </div>
+            <div onclick="showPage('page-stream','arts')" class="subject-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-5xl mb-4">🎨</div>
+                <h3 class="text-white font-bold text-xl mb-2">Arts / Humanities</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">History · Geography · Political Science · More</p>
+            </div>
+            <div onclick="showPage('page-skills', null)" class="subject-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-5xl mb-4">💡</div>
+                <h3 class="text-white font-bold text-xl mb-2">Skills</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">Coding · Video Editing · Cyber Security</p>
+            </div>
+            <div onclick="showPage('page-help', null)" class="subject-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-5xl mb-4">💬</div>
+                <h3 class="text-white font-bold text-xl mb-2">Connect Me</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">GitHub · X · Instagram · Telegram</p>
+            </div>
+            <div onclick="showPage('page-support', null)" class="subject-card glass-strong rounded-2xl p-6 text-center" style="border:1px solid rgba(251,191,36,0.35);">
+                <div class="text-5xl mb-4">❤️</div>
+                <h3 class="text-white font-bold text-xl mb-2">Support Us</h3>
+                <p style="color:#94a3b8;font-size:0.85rem;">PhonePe · GPay · BHIM · UPI</p>
             </div>
         </div>
-        
-        <div id="chemistry-content" class="content-area hidden">
-            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Chemistry - Class 11th</h2>
-                    <div class="text-white font-semibold" id="chemistry-11-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-blue-500 h-3 rounded-full" id="chemistry-11-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="chemistry-11-body"></tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="glass rounded-2xl p-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Chemistry - Class 12th</h2>
-                    <div class="text-white font-semibold" id="chemistry-12-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-blue-500 h-3 rounded-full" id="chemistry-12-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="chemistry-12-body"></tbody>
-                    </table>
-                </div>
+
+        <!-- Reset -->
+        <div class="text-center mb-4">
+            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset All Progress</button>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE: STREAM ==================== -->
+    <div id="page-stream" class="page max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button id="stream-back-btn" onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 id="stream-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
             </div>
         </div>
-        
-        <div id="maths-content" class="content-area hidden">
-            <div class="glass rounded-2xl p-6 mb-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Mathematics - Class 11th</h2>
-                    <div class="text-white font-semibold" id="maths-11-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-purple-500 h-3 rounded-full" id="maths-11-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="maths-11-body"></tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="glass rounded-2xl p-6 animate-fadeIn">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white">Mathematics - Class 12th</h2>
-                    <div class="text-white font-semibold" id="maths-12-progress">0%</div>
-                </div>
-                <div class="w-full bg-gray-300 rounded-full h-3 mb-4 progress-container">
-                    <div class="progress-bar bg-purple-500 h-3 rounded-full" id="maths-12-bar" style="width: 0%"></div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-white">
-                        <thead>
-                            <tr class="border-b border-white border-opacity-30">
-                                <th class="text-left p-3">Chapter</th>
-                                <th class="text-center p-3">Theory</th>
-                                <th class="text-center p-3">Revision</th>
-                                <th class="text-center p-3">PYQs</th>
-                            </tr>
-                        </thead>
-                        <tbody id="maths-12-body"></tbody>
-                    </table>
-                </div>
+
+        <!-- Subject Cards for Stream -->
+        <div id="stream-subjects" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6"></div>
+    </div>
+
+    <!-- ==================== PAGE: CHAPTERS ==================== -->
+    <div id="page-chapters" class="page max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button id="chapter-back-btn" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 id="chapter-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
             </div>
         </div>
-        
-        <div id="help-content" class="content-area hidden">
-            <div class="glass rounded-2xl p-8 md:p-12 animate-fadeIn text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">💬 Help & Support</h2>
-                <p class="text-white text-lg mb-8 opacity-90">Need assistance or have suggestions? Feel free to reach out!</p>
-                
-                <div class="max-w-2xl mx-auto space-y-6">
-                    <!-- Instagram -->
-                    <a href="https://www.instagram.com/k4havv" target="_blank" class="glass-strong rounded-xl p-6 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                        <div class="flex items-center gap-4">
-                            <div class="text-4xl">📸</div>
-                            <div class="text-left">
-                                <h3 class="text-white font-bold text-xl">Instagram</h3>
-                                <p class="text-white opacity-75"></p>
-                            </div>
-                        </div>
-                        <div class="text-white text-2xl group-hover:translate-x-2 transition-transform">→</div>
-                    </a>
-                    
-                    <!-- Telegram -->
-                    <a href="https://t.me/k4hav" target="_blank" class="glass-strong rounded-xl p-6 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                        <div class="flex items-center gap-4">
-                            <div class="text-4xl">✈️</div>
-                            <div class="text-left">
-                                <h3 class="text-white font-bold text-xl">Telegram</h3>
-                                <p class="text-white opacity-75"></p>
-                            </div>
-                        </div>
-                        <div class="text-white text-2xl group-hover:translate-x-2 transition-transform">→</div>
-                    </a>
-                    
-                    <!-- Email -->
-                    <a href="mailto:code4u375@gmail.com" class="glass-strong rounded-xl p-6 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                        <div class="flex items-center gap-4">
-                            <div class="text-4xl">📧</div>
-                            <div class="text-left">
-                                <h3 class="text-white font-bold text-xl">Email</h3>
-                                <p class="text-white opacity-75"></p>
-                            </div>
-                        </div>
-                        <div class="text-white text-2xl group-hover:translate-x-2 transition-transform">→</div>
-                    </a>
-                </div>
-                
-                <div class="mt-10 pt-8 border-t border-white border-opacity-30">
-                    <p class="text-white opacity-75 text-sm">Created with ❤️ to help students track their PCM preparation</p>
-                </div>
+        <div class="text-center mb-4">
+            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset All Progress</button>
+        </div>
+        <div id="chapter-content"></div>
+    </div>
+
+    <!-- ==================== PAGE: SKILLS ==================== -->
+    <div id="page-skills" class="page max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">💡 Skills</h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Coding -->
+            <div onclick="showPage('page-coding', null)" class="skill-card glass-strong rounded-2xl p-8 text-center">
+                <div class="text-6xl mb-4">💻</div>
+                <h3 class="text-white font-bold text-2xl mb-2">Coding</h3>
+                <p style="color:#94a3b8;">Frontend · Backend · Full Stack · App Dev · DSA</p>
+                <div class="mt-4 rounded-xl px-4 py-2 text-sm font-semibold inline-block" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.3));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;">View Roadmaps →</div>
+            </div>
+            <!-- Video Editing -->
+            <div onclick="showPage('page-video', null); renderStaticRoadmap('video');" class="skill-card glass-strong rounded-2xl p-8 text-center">
+                <div class="text-6xl mb-4">🎬</div>
+                <h3 class="text-white font-bold text-2xl mb-2">Video Editing</h3>
+                <p style="color:#94a3b8;">Premiere Pro · After Effects · DaVinci · Shorts/Reels</p>
+                <div class="mt-4 rounded-xl px-4 py-2 text-sm font-semibold inline-block" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.3));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;">View Roadmap →</div>
+            </div>
+            <!-- Cyber Security -->
+            <div onclick="showPage('page-cyber', null); renderStaticRoadmap('cyber');" class="skill-card glass-strong rounded-2xl p-8 text-center">
+                <div class="text-6xl mb-4">🔐</div>
+                <h3 class="text-white font-bold text-2xl mb-2">Cyber Security</h3>
+                <p style="color:#94a3b8;">Networking · Ethical Hacking · Pentesting · CTF</p>
+                <div class="mt-4 rounded-xl px-4 py-2 text-sm font-semibold inline-block" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.3));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;">View Roadmap →</div>
             </div>
         </div>
     </div>
-    
+
+    <!-- ==================== PAGE: CODING ==================== -->
+    <div id="page-coding" class="page max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">💻 Coding Roadmaps</h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div onclick="showRoadmap('frontend')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">🌐</div>
+                <h3 class="text-white font-bold text-xl">Frontend Development</h3>
+                <p class="text-white opacity-70 text-sm mt-1">HTML · CSS · JS · React</p>
+            </div>
+            <div onclick="showRoadmap('backend')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">⚙️</div>
+                <h3 class="text-white font-bold text-xl">Backend Development</h3>
+                <p class="text-white opacity-70 text-sm mt-1">Node.js · Python · Databases · APIs</p>
+            </div>
+            <div onclick="showRoadmap('fullstack')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">🔗</div>
+                <h3 class="text-white font-bold text-xl">Full Stack Development</h3>
+                <p class="text-white opacity-70 text-sm mt-1">MERN · MEAN · Django · Deployment</p>
+            </div>
+            <div onclick="showRoadmap('dsa')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">🧩</div>
+                <h3 class="text-white font-bold text-xl">DSA / Competitive</h3>
+                <p class="text-white opacity-70 text-sm mt-1">Arrays · Trees · Graphs · DP</p>
+            </div>
+            <div onclick="showRoadmap('appdev')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">📱</div>
+                <h3 class="text-white font-bold text-xl">App Development</h3>
+                <p class="text-white opacity-70 text-sm mt-1">Flutter · React Native · Android</p>
+            </div>
+            <div onclick="showRoadmap('aiml')" class="skill-card glass-strong rounded-2xl p-6 text-center">
+                <div class="text-4xl mb-3">🤖</div>
+                <h3 class="text-white font-bold text-xl">AI / ML</h3>
+                <p class="text-white opacity-70 text-sm mt-1">Python · ML · Deep Learning · LLMs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE: ROADMAP DETAIL ==================== -->
+    <div id="page-roadmap" class="page max-w-5xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-coding', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 id="roadmap-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
+            </div>
+        </div>
+        <div id="roadmap-content" class="glass rounded-2xl p-6 md:p-8 text-white"></div>
+    </div>
+
+    <!-- ==================== PAGE: VIDEO EDITING ==================== -->
+    <div id="page-video" class="page max-w-5xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">🎬 Video Editing Roadmap</h2>
+
+            </div>
+        </div>
+        <div class="glass rounded-2xl p-6 md:p-8 text-white" id="video-roadmap-container">
+            <!-- injected by JS -->
+        </div>
+    </div>
+
+    <!-- ==================== PAGE: CYBER SECURITY ==================== -->
+    <div id="page-cyber" class="page max-w-5xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">🔐 Cyber Security Roadmap</h2>
+            </div>
+        </div>
+        <div class="glass rounded-2xl p-6 md:p-8 text-white" id="cyber-roadmap-container">
+            <!-- injected by JS -->
+        </div>
+    </div>
+
+    <!-- ==================== PAGE: HELP & SUPPORT ==================== -->
+    <div id="page-help" class="page max-w-5xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white">💬 Help </h2>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8 md:p-12 text-center">
+            <p style="color:#a5b4fc;font-size:1.1rem;margin-bottom:2rem;">Need help or have suggestions? Reach out on any platform!</p>
+            <div class="max-w-2xl mx-auto space-y-5">
+
+                <!-- GitHub -->
+                <a href="https://github.com/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">🐙</div>
+                        <div class="text-left">
+                            <h3 class="text-white font-bold text-xl">GitHub</h3>
+                            <p style="color:#94a3b8;font-size:0.85rem;">github.com/k4hav</p>
+                        </div>
+                    </div>
+                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
+                </a>
+
+                <!-- X (Twitter) -->
+                <a href="https://x.com/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">🐦</div>
+                        <div class="text-left">
+                            <h3 class="text-white font-bold text-xl">X (Twitter)</h3>
+                            <p style="color:#94a3b8;font-size:0.85rem;">x.com/k4hav</p>
+                        </div>
+                    </div>
+                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/k4havv" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">📸</div>
+                        <div class="text-left">
+                            <h3 class="text-white font-bold text-xl">Instagram</h3>
+                            <p style="color:#94a3b8;font-size:0.85rem;">@k4havv</p>
+                        </div>
+                    </div>
+                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
+                </a>
+
+                <!-- Telegram -->
+                <a href="https://t.me/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
+                    <div class="flex items-center gap-4">
+                        <div class="text-4xl">✈️</div>
+                        <div class="text-left">
+                            <h3 class="text-white font-bold text-xl">Telegram</h3>
+                            <p style="color:#94a3b8;font-size:0.85rem;">t.me/k4hav</p>
+                        </div>
+                    </div>
+                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
+                </a>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-white border-opacity-30">
+                <p style="color:#94a3b8;font-size:0.85rem;">Created with ❤️ to help students track their study preparation</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE: SUPPORT US ==================== -->
+    <div id="page-support" class="page max-w-2xl mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold" style="color:var(--text-accent);">Support Us🫀</h2>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-6 md:p-8 text-center">
+            <p class="mb-1 text-lg font-semibold" style="color:var(--text-accent);">This project is free to use,but</p>
+            <p class="mb-5 text-sm" style="color:#94a3b8;">If you’d like to support me, you can — if not, no worries at all. </p>
+
+            <!-- UPI ID badge -->
+            <div class="glass-strong rounded-xl px-6 py-3 inline-block mb-5">
+                <p class="text-xs mb-1" style="color:#94a3b8;">UPI ID</p>
+                <p class="text-xl font-bold tracking-wide" style="color:#fbbf24;">itskeshav@upi</p>
+            </div>
+
+            <!-- QR Code — pure canvas, no CDN -->
+            <div class="flex justify-center mb-5">
+                <div class="glass-strong rounded-2xl p-4 inline-block">
+                    <img src="https://res.cloudinary.com/dui2zd49s/image/upload/v1771818839/be4a5f29-f251-497a-a334-04fe026d16e8_dlzvln.jpg"width="220" height="220" style="border-radius:10px;display:block;"></canvas>
+                    <p class="text-xs mt-2" style="color:#94a3b8;">Scan with any UPI app</p>
+                </div>
+            </div>
+
+           
+
+            <!-- Pay buttons — real <a> anchors for reliable app opening -->
+            <p class="text-sm mb-3 font-semibold" style="color:var(--text-accent2);">📲 Scan and Pay</p>
+            <div class="grid grid-cols-2 gap-3 mb-5" id="pay-links-grid">
+                <!-- Filled by JS with correct UPI deeplinks -->
+            </div>
+
+            <div class="pt-4 border-t" style="border-color:rgba(255,255,255,0.1);">
+                <p class="text-xs" style="color:#64748b;">Thank you for your support💜</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="fixed bottom-0 left-0 right-0 footer py-3 text-center text-sm font-medium tracking-wide z-50">
+        © 2026 K4hav. All Rights Reserved.
+    </footer>
+
     <script>
-        const chapters = {
-            physics: {
-                11: [
-                    "Physical World",
-                    "Units and Measurements",
-                    "Motion in a Straight Line",
-                    "Motion in a Plane",
-                    "Laws of Motion",
-                    "Work, Energy and Power",
-                    "System of Particles and Rotational Motion",
-                    "Gravitation",
-                    "Mechanical Properties of Solids",
-                    "Mechanical Properties of Fluids",
-                    "Thermal Properties of Matter",
-                    "Thermodynamics",
-                    "Kinetic Theory",
-                    "Oscillations",
-                    "Waves"
-                ],
-                12: [
-                    "Electric Charges and Fields",
-                    "Electrostatic Potential and Capacitance",
-                    "Current Electricity",
-                    "Moving Charges and Magnetism",
-                    "Magnetism and Matter",
-                    "Electromagnetic Induction",
-                    "Alternating Current",
-                    "Electromagnetic Waves",
-                    "Ray Optics and Optical Instruments",
-                    "Wave Optics",
-                    "Dual Nature of Radiation and Matter",
-                    "Atoms",
-                    "Nuclei",
-                    "Semiconductor Electronics"
-                ]
-            },
-            chemistry: {
-                11: [
-                    "Some Basic Concepts of Chemistry",
-                    "Structure of Atom",
-                    "Classification of Elements and Periodicity in Properties",
-                    "Chemical Bonding and Molecular Structure",
-                    "States of Matter",
-                    "Thermodynamics",
-                    "Equilibrium",
-                    "Redox Reactions",
-                    "Hydrogen",
-                    "The s-Block Elements",
-                    "The p-Block Elements (Group 13 & 14)",
-                    "Organic Chemistry: Some Basic Principles and Techniques",
-                    "Hydrocarbons",
-                    "Environmental Chemistry"
-                ],
-                12: [
-                    "The Solid State",
-                    "Solutions",
-                    "Electrochemistry",
-                    "Chemical Kinetics",
-                    "Surface Chemistry",
-                    "General Principles and Processes of Isolation of Elements",
-                    "The p-Block Elements (Group 15, 16, 17, 18)",
-                    "The d- and f-Block Elements",
-                    "Coordination Compounds",
-                    "Haloalkanes and Haloarenes",
-                    "Alcohols, Phenols and Ethers",
-                    "Aldehydes, Ketones and Carboxylic Acids",
-                    "Amines",
-                    "Biomolecules",
-                    "Polymers",
-                    "Chemistry in Everyday Life"
-                ]
-            },
-            maths: {
-                11: [
-                    "Sets",
-                    "Relations and Functions",
-                    "Trigonometric Functions",
-                    "Principle of Mathematical Induction",
-                    "Complex Numbers and Quadratic Equations",
-                    "Linear Inequalities",
-                    "Permutations and Combinations",
-                    "Binomial Theorem",
-                    "Sequences and Series",
-                    "Straight Lines",
-                    "Conic Sections",
-                    "Introduction to Three Dimensional Geometry",
-                    "Limits and Derivatives",
-                    "Mathematical Reasoning",
-                    "Statistics",
-                    "Probability"
-                ],
-                12: [
-                    "Relations and Functions",
-                    "Inverse Trigonometric Functions",
-                    "Matrices",
-                    "Determinants",
-                    "Continuity and Differentiability",
-                    "Application of Derivatives",
-                    "Integrals",
-                    "Application of Integrals",
-                    "Differential Equations",
-                    "Vector Algebra",
-                    "Three Dimensional Geometry",
-                    "Linear Programming",
-                    "Probability"
-                ]
+    /* ===================== DATA ===================== */
+    const streams = {
+        science: {
+            name: '🔬 Science',
+            substreams: true,
+            cards: [
+                { key: 'science_bio',   emoji: '🧬', label: 'Biology',     desc: 'Physics · Chemistry · Biology' },
+                { key: 'science_maths', emoji: '📐', label: 'Mathematics', desc: 'Physics · Chemistry · Mathematics' }
+            ]
+        },
+        science_bio: {
+            name: '🧬 Science — Biology',
+            subjects: ['physics', 'chemistry', 'biology']
+        },
+        science_maths: {
+            name: '📐 Science — Mathematics',
+            subjects: ['physics', 'chemistry', 'maths']
+        },
+        commerce: {
+            name: '💼 Commerce',
+            subjects: ['accountancy', 'business', 'economics', 'maths_commerce', 'english']
+        },
+        arts: {
+            name: '🎨 Arts / Humanities',
+            subjects: ['history', 'geography', 'political_science', 'economics', 'sociology', 'psychology', 'english']
+        }
+    };
+
+    const subjectMeta = {
+        physics:          { label: 'Physics',               emoji: '⚛️',  color: 'bg-blue-500' },
+        chemistry:        { label: 'Chemistry',              emoji: '🧪',  color: 'bg-green-500' },
+        maths:            { label: 'Mathematics',            emoji: '📐',  color: 'bg-purple-500' },
+        biology:          { label: 'Biology',                emoji: '🌱',  color: 'bg-emerald-500' },
+        accountancy:      { label: 'Accountancy',            emoji: '📒',  color: 'bg-yellow-500' },
+        business:         { label: 'Business Studies',       emoji: '🏢',  color: 'bg-orange-500' },
+        economics:        { label: 'Economics',              emoji: '📊',  color: 'bg-teal-500' },
+        maths_commerce:   { label: 'Mathematics (Commerce)', emoji: '🔢',  color: 'bg-indigo-500' },
+        english:          { label: 'English',                emoji: '📝',  color: 'bg-pink-500' },
+        history:          { label: 'History',                emoji: '🏛️',  color: 'bg-amber-500' },
+        geography:        { label: 'Geography',              emoji: '🌍',  color: 'bg-cyan-500' },
+        political_science:{ label: 'Political Science',      emoji: '⚖️',  color: 'bg-red-500' },
+        sociology:        { label: 'Sociology',              emoji: '👥',  color: 'bg-fuchsia-500' },
+        psychology:       { label: 'Psychology',             emoji: '🧠',  color: 'bg-violet-500' },
+    };
+
+    const chapters = {
+        physics: {
+            11: ["Physical World","Units and Measurements","Motion in a Straight Line","Motion in a Plane","Laws of Motion","Work, Energy and Power","System of Particles and Rotational Motion","Gravitation","Mechanical Properties of Solids","Mechanical Properties of Fluids","Thermal Properties of Matter","Thermodynamics","Kinetic Theory","Oscillations","Waves"],
+            12: ["Electric Charges and Fields","Electrostatic Potential and Capacitance","Current Electricity","Moving Charges and Magnetism","Magnetism and Matter","Electromagnetic Induction","Alternating Current","Electromagnetic Waves","Ray Optics and Optical Instruments","Wave Optics","Dual Nature of Radiation and Matter","Atoms","Nuclei","Semiconductor Electronics"]
+        },
+        chemistry: {
+            11: ["Some Basic Concepts of Chemistry","Structure of Atom","Classification of Elements and Periodicity","Chemical Bonding and Molecular Structure","States of Matter","Thermodynamics","Equilibrium","Redox Reactions","Hydrogen","The s-Block Elements","The p-Block Elements (Group 13 & 14)","Organic Chemistry: Basic Principles","Hydrocarbons","Environmental Chemistry"],
+            12: ["The Solid State","Solutions","Electrochemistry","Chemical Kinetics","Surface Chemistry","Isolation of Elements","The p-Block Elements (Group 15–18)","The d- and f-Block Elements","Coordination Compounds","Haloalkanes and Haloarenes","Alcohols, Phenols and Ethers","Aldehydes, Ketones and Carboxylic Acids","Amines","Biomolecules","Polymers","Chemistry in Everyday Life"]
+        },
+        maths: {
+            11: ["Sets","Relations and Functions","Trigonometric Functions","Principle of Mathematical Induction","Complex Numbers and Quadratic Equations","Linear Inequalities","Permutations and Combinations","Binomial Theorem","Sequences and Series","Straight Lines","Conic Sections","Introduction to 3D Geometry","Limits and Derivatives","Mathematical Reasoning","Statistics","Probability"],
+            12: ["Relations and Functions","Inverse Trigonometric Functions","Matrices","Determinants","Continuity and Differentiability","Application of Derivatives","Integrals","Application of Integrals","Differential Equations","Vector Algebra","Three Dimensional Geometry","Linear Programming","Probability"]
+        },
+        biology: {
+            11: ["The Living World","Biological Classification","Plant Kingdom","Animal Kingdom","Morphology of Flowering Plants","Anatomy of Flowering Plants","Structural Organisation in Animals","Cell: The Unit of Life","Biomolecules","Cell Cycle and Cell Division","Transport in Plants","Mineral Nutrition","Photosynthesis in Higher Plants","Respiration in Plants","Plant Growth and Development","Digestion and Absorption","Breathing and Exchange of Gases","Body Fluids and Circulation","Excretory Products and their Elimination","Locomotion and Movement","Neural Control and Coordination","Chemical Coordination and Integration"],
+            12: ["Reproduction in Organisms","Sexual Reproduction in Flowering Plants","Human Reproduction","Reproductive Health","Principles of Inheritance and Variation","Molecular Basis of Inheritance","Evolution","Human Health and Disease","Strategies for Enhancement in Food Production","Microbes in Human Welfare","Biotechnology – Principles and Processes","Biotechnology and its Applications","Organisms and Populations","Ecosystem","Biodiversity and Conservation","Environmental Issues"]
+        },
+        accountancy: {
+            11: ["Introduction to Accounting","Theory Base of Accounting","Recording of Transactions I","Recording of Transactions II","Bank Reconciliation Statement","Trial Balance and Rectification","Depreciation, Provisions and Reserves","Bills of Exchange","Financial Statements I","Financial Statements II","Accounts from Incomplete Records","Applications of Computers in Accounting"],
+            12: ["Accounting for Not-for-Profit Organisations","Accounting for Partnership – Basic Concepts","Reconstitution of Partnership – Admission","Reconstitution of Partnership – Retirement/Death","Dissolution of Partnership Firm","Accounting for Share Capital","Issue and Redemption of Debentures","Financial Statements of a Company","Analysis of Financial Statements","Accounting Ratios","Cash Flow Statement"]
+        },
+        business: {
+            11: ["Business, Trade and Commerce","Forms of Business Organisations","Private, Public and Global Enterprises","Business Services","Emerging Modes of Business","Social Responsibilities of Business","Formation of a Company","Sources of Business Finance","Small Business and Entrepreneurship","Internal Trade","International Business"],
+            12: ["Nature and Significance of Management","Principles of Management","Business Environment","Planning","Organising","Staffing","Directing","Controlling","Financial Management","Financial Markets","Marketing Management","Consumer Protection","Entrepreneurship Development"]
+        },
+        economics: {
+            11: ["Introduction to Microeconomics","Central Problems of an Economy","Consumer's Equilibrium – Utility Analysis","Consumer's Equilibrium – Indifference Curve","Demand","Elasticity of Demand","Production Function – Returns to a Factor","Cost","Supply","Revenue","Forms of Market and Price Determination","Introduction to Macroeconomics","National Income Accounting","Money and Banking","Income Determination","Government Budget and the Economy","Balance of Payments"],
+            12: ["Introduction to Macroeconomics","National Income and Related Aggregates","Money and Banking","Determination of Income and Employment","Government Budget and Economy","Open Economy Macroeconomics","Introduction to Microeconomics","Consumer Behaviour","Producer Behaviour and Supply","Forms of Market and Price Determination","Indian Economy at a Glance","Poverty","Human Capital Formation","Rural Development","Employment","Infrastructure","Environment and Sustainable Development","Current Challenges","Development Experience of India"]
+        },
+        maths_commerce: {
+            11: ["Sets","Relations and Functions","Trigonometric Functions","Complex Numbers","Linear Inequalities","Permutations and Combinations","Binomial Theorem","Sequences and Series","Straight Lines","Conic Sections","Introduction to 3D Geometry","Limits and Derivatives","Statistics","Probability"],
+            12: ["Relations and Functions","Inverse Trigonometric Functions","Matrices and Determinants","Continuity and Differentiability","Application of Derivatives","Integrals","Application of Integrals","Differential Equations","Vector Algebra","Linear Programming","Probability"]
+        },
+        english: {
+            11: ["The Portrait of a Lady","We're Not Afraid to Die","Discovering Tut","Landscape of the Soul","The Ailing Planet","The Browning Version","The Adventure","Silk Road","A Photograph","The Laburnum Top","The Voice of the Rain","Childhood","Father to Son","Hornbill Prose Chapters","Snapshots – Short Stories"],
+            12: ["The Last Lesson","Lost Spring","Deep Water","The Rattrap","Indigo","Poets and Pancakes","The Interview","Going Places","My Mother at Sixty Six","An Elementary School Classroom","A Thing of Beauty","A Roadside Stand","Aunt Jennifer's Tigers","The Tiger King","The Enemy","On the Face of It","Memories of Childhood","Vistas Short Stories"]
+        },
+        history: {
+            11: ["From the Beginning of Time","Writing and City Life","An Empire Across Three Continents","The Central Islamic Lands","Nomadic Empires","The Three Orders","Changing Cultural Traditions","Confrontation of Cultures","The Industrial Revolution","Displacing Indigenous Peoples","Paths to Modernisation"],
+            12: ["Bricks, Beads and Bones – Harappan Civilisation","Kings, Farmers and Towns","Kinship, Caste and Class","Thinkers, Beliefs and Buildings","Through the Eyes of Travellers","Bhakti Sufi Traditions","An Imperial Capital – Vijayanagara","Peasants, Zamindars and the State","Kings and Chronicles – Mughal Courts","Colonialism and the Countryside","Rebels and the Raj – 1857","Colonial Cities","Mahatma Gandhi and the Nationalist Movement","Understanding Partition","Framing the Constitution"]
+        },
+        geography: {
+            11: ["Geography as a Discipline","The Origin and Evolution of the Earth","Interior of the Earth","Distribution of Oceans and Continents","Minerals and Rocks","Geomorphic Processes","Landforms and their Evolution","Composition and Structure of Atmosphere","Solar Radiation, Heat Balance","Atmospheric Circulation","Water in the Atmosphere","World Climate and Climate Change","Water Oceans","Movements of Ocean Water","Life on the Earth","Biodiversity and Conservation","India Location","Structure and Physiography","Drainage System","Climate of India","Natural Vegetation","Soils of India","Natural Hazards"],
+            12: ["Human Geography – Nature and Scope","The World Population","Population Composition","Human Development","Primary Activities","Secondary Activities","Tertiary and Quaternary Activities","Transport and Communication","International Trade","Human Settlements","Population – Distribution, Density","Migration – Types and Causes","Human Development (India)","Human Settlements (India)","Land Resources and Agriculture","Water Resources","Mineral and Energy Resources","Manufacturing Industries","Planning and Sustainable Development","Transport, Communication and Trade","International Trade","Geographical Perspective on Issues"]
+        },
+        political_science: {
+            11: ["Political Theory – Introduction","Freedom","Equality","Social Justice","Rights","Citizenship","Nationalism","Secularism","Peace","Development","Constitution – Why and How","Rights in the Indian Constitution","Election and Representation","Executive","Legislature","Judiciary","Federalism","Local Governments","Constitution as a Living Document","The Philosophy of the Constitution"],
+            12: ["Cold War Era","The End of Bipolarity","US Hegemony in World Politics","Alternative Centres of Power","Contemporary South Asia","International Organisations","Security in the Contemporary World","Environment and Natural Resources","Globalisation","Challenges of Nation Building","Era of One-Party Dominance","Politics of Planned Development","India's External Relations","Challenges to the Congress System","Crisis of the Constitutional Order","Rise of Popular Movements","Regional Aspirations","Recent Developments in Indian Politics"]
+        },
+        sociology: {
+            11: ["Sociology and Society","Terms, Concepts and their Use","Understanding Social Institutions","Culture and Socialisation","Doing Sociology – Research Methods","Social Structure, Stratification and Social Processes","Social Change and Social Order","Environment and Society","Introducing Western Sociologists","Indian Sociologists"],
+            12: ["Structural Change","Cultural Change","The Story of Indian Democracy","Change and Development in Rural Society","Change and Development in Industrial Society","Globalisation and Social Change","Mass Media and Communications","Social Movements","Indian Society – Introduction","The Demographic Structure","Social Institutions – Continuity and Change","Market as a Social Institution","Pattern of Social Inequality and Exclusion","Challenges of Cultural Diversity","Change and Development in India"]
+        },
+        psychology: {
+            11: ["What is Psychology?","Methods of Enquiry in Psychology","The Bases of Human Behaviour","Human Development","Sensory, Attentional and Perceptual Processes","Learning","Human Memory","Thinking","Motivation and Emotion"],
+            12: ["Variations in Psychological Attributes","Self and Personality","Meeting Life Challenges","Psychological Disorders","Therapeutic Approaches","Attitude and Social Cognition","Social Influence and Group Processes","Psychology and Life","Developing Psychological Skills"]
+        }
+    };
+
+    /* ===================== ROADMAPS DATA ===================== */
+    const roadmaps = {
+        frontend: {
+            title: '🌐 Frontend Development Roadmap',
+            phases: [
+                { title: 'Phase 1 — HTML & CSS Basics (Week 1–2)', color: 'text-yellow-200', steps: [
+                    { title: 'HTML Fundamentals', desc: 'Tags & elements, Semantic HTML5, Forms & inputs, Tables, Media (img, video, audio), Accessibility basics' },
+                    { title: 'CSS Styling', desc: 'Selectors, Box model, Flexbox, CSS Grid, Responsive design (Media queries), CSS variables, Animations & transitions' },
+                    { title: 'Tools Setup', desc: 'VS Code + extensions, Browser DevTools, Git & GitHub basics' }
+                ]},
+                { title: 'Phase 2 — JavaScript (Week 3–6)', color: 'text-green-200', steps: [
+                    { title: 'JS Fundamentals', desc: 'Variables (let/const/var), Data types, Functions, Arrays & Objects, Loops & conditionals, DOM manipulation, Events' },
+                    { title: 'ES6+ Modern JS', desc: 'Arrow functions, Destructuring, Spread/Rest, Modules (import/export), Promises & Async/Await, Fetch API' },
+                    { title: 'Practice Projects', desc: 'To-do app, Weather app (using API), Calculator, Expense Tracker' }
+                ]},
+                { title: 'Phase 3 — React.js (Week 7–12)', color: 'text-blue-200', steps: [
+                    { title: 'React Basics', desc: 'JSX, Components (functional), Props & State, useState, useEffect, Event handling, Conditional rendering, Lists & keys' },
+                    { title: 'React Intermediate', desc: 'React Router (navigation), Context API, Custom hooks, useRef, useMemo, useCallback' },
+                    { title: 'State Management', desc: 'Redux Toolkit or Zustand, Async state (React Query / RTK Query)' },
+                    { title: 'Styling in React', desc: 'Tailwind CSS, Styled-components, shadcn/ui components' }
+                ]},
+                { title: 'Phase 4 — Advanced (Month 4–6)', color: 'text-pink-200', steps: [
+                    { title: 'Next.js', desc: 'SSR, SSG, ISR, App Router, API routes, Image optimisation, SEO' },
+                    { title: 'Testing', desc: 'Jest, React Testing Library, Cypress (E2E testing)' },
+                    { title: 'Performance', desc: 'Lighthouse audit, Lazy loading, Code splitting, PWA basics, Web Vitals (LCP, FID, CLS)' },
+                    { title: 'Deployment', desc: 'Vercel / Netlify / GitHub Pages, CI/CD basics, Environment variables, Domain setup' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'YouTube: Traversy Media, Fireship, Kevin Powell (CSS) | Docs: MDN Web Docs, React docs | Practice: Frontend Mentor, CSS Battle' }
+                ]}
+            ]
+        },
+        backend: {
+            title: '⚙️ Backend Development Roadmap',
+            phases: [
+                { title: 'Phase 1 — Foundations (Week 1–3)', color: 'text-yellow-200', steps: [
+                    { title: 'Pick a Language', desc: 'Node.js (JS) — most popular for web. Python (Django/FastAPI) — great for ML integration. Java (Spring Boot) — enterprise. Go — high performance' },
+                    { title: 'Node.js + Express.js Basics', desc: 'HTTP basics, REST API concepts, Express setup, Routing, Middleware, Request/Response handling, Error handling' },
+                    { title: 'Databases — SQL', desc: 'SQL basics (SELECT, JOIN, GROUP BY), PostgreSQL or MySQL, Relationships (1:1, 1:N, M:N), Indexes, Transactions' }
+                ]},
+                { title: 'Phase 2 — Core Backend (Week 4–8)', color: 'text-green-200', steps: [
+                    { title: 'Authentication & Security', desc: 'JWT (JSON Web Tokens), Sessions & Cookies, bcrypt (password hashing), OAuth 2.0, CORS, Rate limiting, Input validation' },
+                    { title: 'NoSQL Databases', desc: 'MongoDB basics, Mongoose ODM, Document model, Aggregation pipeline, When to use SQL vs NoSQL' },
+                    { title: 'ORM / ODM', desc: 'Prisma (Node.js) or SQLAlchemy (Python), Sequelize, Database migrations' },
+                    { title: 'API Design', desc: 'RESTful API best practices, HTTP methods & status codes, Versioning, Pagination, API documentation (Swagger/Postman)' }
+                ]},
+                { title: 'Phase 3 — Advanced (Month 3–5)', color: 'text-blue-200', steps: [
+                    { title: 'Caching', desc: 'Redis basics, In-memory caching, Cache invalidation strategies, CDN caching' },
+                    { title: 'Message Queues', desc: 'RabbitMQ or Kafka basics, Job queues (Bull/BullMQ), Async processing' },
+                    { title: 'Microservices', desc: 'Monolith vs microservices, Service communication (REST, gRPC), API Gateway, Docker basics' },
+                    { title: 'Testing', desc: 'Unit testing (Jest/Mocha), Integration testing, API testing (Supertest), Test-Driven Development (TDD)' }
+                ]},
+                { title: 'Phase 4 — DevOps & Deployment (Month 5–6)', color: 'text-pink-200', steps: [
+                    { title: 'Docker & Containers', desc: 'Dockerfile, Docker Compose, Container networking, Volume management' },
+                    { title: 'Cloud Deployment', desc: 'AWS (EC2, RDS, S3) or Render/Railway/Heroku, Nginx reverse proxy, SSL certificates (Let\'s Encrypt), Environment variables' },
+                    { title: 'CI/CD', desc: 'GitHub Actions, Automated testing on push, Auto-deployment pipelines' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'YouTube: Traversy Media, Codevolution, Hitesh Choudhary | Tools: Postman, TablePlus, pgAdmin | Practice: Build a full REST API with auth' }
+                ]}
+            ]
+        },
+        fullstack: {
+            title: '🔗 Full Stack Development Roadmap',
+            phases: [
+                { title: 'Step 1 — Learn Frontend First', color: 'text-yellow-200', steps: [
+                    { title: 'Complete Frontend Roadmap', desc: 'HTML + CSS + JavaScript + React.js. Refer to the Frontend roadmap above for details. Time: 2–3 months' }
+                ]},
+                { title: 'Step 2 — Learn Backend', color: 'text-green-200', steps: [
+                    { title: 'Complete Backend Roadmap', desc: 'Node.js + Express + MongoDB/PostgreSQL + Authentication. Refer to the Backend roadmap. Time: 2–3 months' }
+                ]},
+                { title: 'Step 3 — Connect Frontend & Backend', color: 'text-blue-200', steps: [
+                    { title: 'Integration Skills', desc: 'Axios/Fetch for API calls, CORS handling, JWT stored in localStorage/cookies, Protected routes in React, Form handling & validation' },
+                    { title: 'Popular Full Stack Stacks', desc: 'MERN (MongoDB + Express + React + Node) | MEAN (MongoDB + Express + Angular + Node) | Next.js + Prisma + PostgreSQL | Django + React | FastAPI + React' }
+                ]},
+                { title: 'Step 4 — Full Stack Projects', color: 'text-pink-200', steps: [
+                    { title: 'Project Ideas', desc: 'Blog platform with auth, E-commerce site (products, cart, payments), Task management app, Real-time chat app (Socket.io), Social media clone' },
+                    { title: 'Deployment', desc: 'Frontend on Vercel/Netlify, Backend on Railway/Render/AWS, Database on Supabase/PlanetScale/MongoDB Atlas' }
+                ]},
+                { title: 'Step 5 — Extra Skills', color: 'text-purple-200', steps: [
+                    { title: 'TypeScript', desc: 'Add TypeScript to both frontend and backend for type safety. Major companies require this.' },
+                    { title: 'Payment Integration', desc: 'Stripe or Razorpay integration for e-commerce projects' },
+                    { title: 'File Uploads', desc: 'Multer + Cloudinary / AWS S3 for image/video uploads' },
+                    { title: 'Real-time Features', desc: 'Socket.io for live chat, notifications, real-time updates' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'Courses: The Odin Project (free), Full Stack Open (free), Zero to Mastery | YouTube: Traversy Media, Fireship, Jack Herrington | Practice: Build 3 full stack projects for portfolio' }
+                ]}
+            ]
+        },
+        dsa: {
+            title: '🧩 DSA & Competitive Programming Roadmap',
+            phases: [
+                { title: 'Phase 1 — Language & Basics (Week 1–2)', color: 'text-yellow-200', steps: [
+                    { title: 'Choose Language', desc: 'C++ (most popular in competitive programming), Java, or Python. C++ is fastest for CP.' },
+                    { title: 'Basic Programming', desc: 'Input/Output, Loops, Conditionals, Functions, Recursion basics, STL basics (vector, map, set, pair)' },
+                    { title: 'Time & Space Complexity', desc: 'Big O notation, O(1), O(n), O(n²), O(log n), O(n log n). Analyse your code.' }
+                ]},
+                { title: 'Phase 2 — Core Data Structures (Week 3–8)', color: 'text-green-200', steps: [
+                    { title: 'Arrays & Strings', desc: 'Two-pointer technique, Sliding window, Prefix sums, Kadane\'s algorithm, String manipulation' },
+                    { title: 'Linked Lists', desc: 'Singly & Doubly linked lists, Reversing, Detecting cycles (Floyd\'s algorithm), Merging sorted lists' },
+                    { title: 'Stacks & Queues', desc: 'Stack applications (balanced parentheses, next greater element), Queue, Deque, Monotonic stack' },
+                    { title: 'Trees', desc: 'Binary Tree, BST, Tree traversals (Inorder, Preorder, Postorder), Height/diameter, LCA, Segment Tree basics' },
+                    { title: 'Hashing', desc: 'HashMap/HashSet, Frequency counting, Anagram detection, Subarray with given sum' }
+                ]},
+                { title: 'Phase 3 — Algorithms (Month 3–5)', color: 'text-blue-200', steps: [
+                    { title: 'Sorting Algorithms', desc: 'Bubble, Selection, Insertion, Merge Sort, Quick Sort. Know time complexities. Counting sort, Radix sort.' },
+                    { title: 'Searching', desc: 'Binary Search (and its variations — lower_bound, upper_bound), Search in rotated array, Ternary search' },
+                    { title: 'Graph Algorithms', desc: 'BFS, DFS, Dijkstra\'s shortest path, Bellman-Ford, Floyd Warshall, Topological Sort, Union-Find (DSU), Minimum Spanning Tree (Prim\'s, Kruskal\'s)' },
+                    { title: 'Dynamic Programming', desc: 'Memoization vs Tabulation, 0/1 Knapsack, Longest Common Subsequence, Longest Increasing Subsequence, DP on trees, Bitmask DP' },
+                    { title: 'Greedy Algorithms', desc: 'Activity selection, Huffman coding, Fractional Knapsack, Meeting rooms problem' }
+                ]},
+                { title: 'Phase 4 — Advanced & Competitive (Month 6+)', color: 'text-pink-200', steps: [
+                    { title: 'Advanced Topics', desc: 'Segment Trees (lazy propagation), Fenwick Tree (BIT), Trie, Suffix Array, KMP / Z-algorithm for strings, Game Theory basics' },
+                    { title: 'Competitive Programming', desc: 'Participate in Codeforces (Div 3 → Div 2), AtCoder Beginner Contests, LeetCode weekly/biweekly. Target: Solve 300+ problems.' },
+                    { title: 'Interview Prep', desc: 'LeetCode Top 150, NeetCode 150, Blind 75. Focus on Arrays, DP, Graphs, Trees for FAANG-level interviews.' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'YouTube: Striver (take U forward), Abdul Bari, Aditya Verma (DP) | Sheets: Striver\'s A2Z DSA Sheet, NeetCode | Practice: LeetCode, Codeforces, CodeChef, HackerRank' }
+                ]}
+            ]
+        },
+        appdev: {
+            title: '📱 App Development Roadmap',
+            phases: [
+                { title: 'Phase 1 — Choose Your Path', color: 'text-yellow-200', steps: [
+                    { title: 'Option A: Flutter (Cross-platform — Recommended)', desc: 'One codebase for Android + iOS + Web. Language: Dart. Best for startups and solo devs.' },
+                    { title: 'Option B: React Native (Cross-platform)', desc: 'If you know React.js already. Uses JavaScript. Good community, used by Facebook, Shopify.' },
+                    { title: 'Option C: Android Native', desc: 'Language: Kotlin (or Java). Best performance. Only Android. Use Android Studio.' }
+                ]},
+                { title: 'Phase 2 — Flutter Roadmap (Recommended Path)', color: 'text-green-200', steps: [
+                    { title: 'Dart Language Basics', desc: 'Variables, Functions, OOP (Classes, Inheritance), Async/Await, Null safety' },
+                    { title: 'Flutter Fundamentals', desc: 'Widgets (StatelessWidget, StatefulWidget), Material Design, Layout (Row, Column, Stack), Navigation, Forms, List views' },
+                    { title: 'State Management', desc: 'Provider (beginner), Riverpod or Bloc (intermediate), GetX. State is crucial in Flutter.' },
+                    { title: 'Backend Integration', desc: 'HTTP package for REST APIs, Firebase (Firestore, Auth, Storage), Supabase' },
+                    { title: 'Publishing', desc: 'Play Store (Android) — Google Play Console, App Store (iOS) — Apple Developer account, App signing & versioning' }
+                ]},
+                { title: 'Phase 3 — Build Apps', color: 'text-blue-200', steps: [
+                    { title: 'Project Ideas', desc: 'To-do/Notes app, Weather app (OpenWeather API), Chat app (Firebase), E-commerce app, Expense tracker' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'Flutter: Flutter Mapp, Rivaan Ranawat, FilledStacks | React Native: William Candillon | Official: docs.flutter.dev, reactnative.dev' }
+                ]}
+            ]
+        },
+        aiml: {
+            title: '🤖 AI / Machine Learning Roadmap',
+            phases: [
+                { title: 'Phase 1 — Prerequisites (Month 1)', color: 'text-yellow-200', steps: [
+                    { title: 'Python Programming', desc: 'Python basics, Functions, OOP, File handling, Virtual environments, pip packages' },
+                    { title: 'Mathematics', desc: 'Linear Algebra (vectors, matrices, dot product), Calculus (derivatives, gradients), Probability & Statistics (mean, variance, distributions), Optimization' },
+                    { title: 'Data Tools', desc: 'NumPy, Pandas, Matplotlib, Seaborn (for data visualization)' }
+                ]},
+                { title: 'Phase 2 — Machine Learning (Month 2–4)', color: 'text-green-200', steps: [
+                    { title: 'ML Fundamentals', desc: 'Supervised vs Unsupervised vs Reinforcement Learning, Train/Test split, Cross-validation, Bias-Variance tradeoff, Overfitting & Regularisation' },
+                    { title: 'Algorithms', desc: 'Linear Regression, Logistic Regression, Decision Trees, Random Forests, SVM, K-Means Clustering, KNN, Naive Bayes, XGBoost' },
+                    { title: 'Scikit-learn', desc: 'sklearn for implementing all ML algorithms, Pipelines, GridSearchCV, Feature engineering' }
+                ]},
+                { title: 'Phase 3 — Deep Learning (Month 4–7)', color: 'text-blue-200', steps: [
+                    { title: 'Neural Networks', desc: 'Perceptron, Activation functions, Forward/Backpropagation, Gradient descent, Batch normalisation, Dropout' },
+                    { title: 'Deep Learning Frameworks', desc: 'TensorFlow + Keras (beginner-friendly) or PyTorch (research-favourite). Learn one deeply.' },
+                    { title: 'CNN (Computer Vision)', desc: 'Convolutional layers, Pooling, ImageNet, Transfer learning (ResNet, VGG, EfficientNet), Object detection (YOLO)' },
+                    { title: 'NLP & LLMs', desc: 'Text preprocessing, Word embeddings (Word2Vec, GloVe), Transformers (BERT, GPT), HuggingFace, LangChain basics, RAG (Retrieval-Augmented Generation)' }
+                ]},
+                { title: 'Phase 4 — Projects & Deployment (Month 7–10)', color: 'text-pink-200', steps: [
+                    { title: 'ML Projects', desc: 'House price prediction, Image classifier, Sentiment analysis, Chatbot, Recommendation system, Face detection' },
+                    { title: 'MLOps', desc: 'MLflow (experiment tracking), Model versioning, Docker for ML, FastAPI for model serving, Deploying on AWS/GCP' },
+                    { title: 'Kaggle Competitions', desc: 'Join Kaggle, solve competitions, learn from top notebooks, build public profile' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'Courses: Andrew Ng\'s ML Course (Coursera), fast.ai, CS231n (Stanford) | YouTube: Sentdex, Andrej Karpathy, StatQuest | Books: "Hands-On ML" by Aurélien Géron' }
+                ]}
+            ]
+        }
+    };
+
+    /* ===================== PAGE NAVIGATION ===================== */
+    let currentStream = null;
+    let currentSubject = null;
+    let currentStreamKey = null; // track exact stream key for adv pyq
+
+    function showPage(pageId, data) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0, 0);
+
+        if (pageId === 'page-stream' && data) {
+            currentStream = data;
+            const parentStream = { science_bio: 'science', science_maths: 'science' };
+            const backBtn = document.getElementById('stream-back-btn');
+            if (parentStream[data]) {
+                backBtn.onclick = () => showPage('page-stream', parentStream[data]);
+            } else {
+                backBtn.onclick = () => showPage('page-home', null);
             }
-        };
-        
-        function createCheckbox(subject, cls, chapter, type) {
-            const id = `${subject}-${cls}-${chapter}-${type}`;
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.className = 'checkbox-custom';
-            checkbox.id = id;
-            checkbox.onchange = () => saveProgress(id, checkbox.checked);
-            return checkbox;
+            loadStreamPage(data);
         }
-        
-        function initializeTable(subject, cls) {
-            const tbody = document.getElementById(`${subject}-${cls}-body`);
-            tbody.innerHTML = '';
-            
-            chapters[subject][cls].forEach((chapter, index) => {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-white border-opacity-20';
-                row.innerHTML = `
-                    <td class="p-3">${index + 1}. ${chapter}</td>
-                    <td class="text-center p-3"></td>
-                    <td class="text-center p-3"></td>
-                    <td class="text-center p-3"></td>
+
+        if (pageId === 'page-support') {
+            if (typeof generateQR === 'function') generateQR();
+        }
+    }
+
+    function loadStreamPage(streamKey) {
+        const stream = streams[streamKey];
+        document.getElementById('stream-title').textContent = stream.name;
+        const container = document.getElementById('stream-subjects');
+        container.innerHTML = '';
+
+        // If stream has sub-streams (like Science → Biology / Mathematics)
+        if (stream.substreams) {
+            stream.cards.forEach(card => {
+                const div = document.createElement('div');
+                div.className = 'subject-card glass-strong rounded-2xl p-8 text-center';
+                div.innerHTML = `
+                    <div class="text-5xl mb-4">${card.emoji}</div>
+                    <h3 class="text-white font-bold text-2xl mb-2">${card.label}</h3>
+                    <p class="text-white opacity-70 text-sm mb-4">${card.desc}</p>
+                    <div class="mt-2 rounded-xl px-4 py-2 text-sm font-semibold inline-block" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.3));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;">Select →</div>
                 `;
-                
-                const theoryCb = createCheckbox(subject, cls, index, 'theory');
-                const revisionCb = createCheckbox(subject, cls, index, 'revision');
-                const pyqCb = createCheckbox(subject, cls, index, 'pyq');
-                
-                row.cells[1].appendChild(theoryCb);
-                row.cells[2].appendChild(revisionCb);
-                row.cells[3].appendChild(pyqCb);
-                
-                tbody.appendChild(row);
+                div.onclick = () => showPage('page-stream', card.key);
+                container.appendChild(div);
             });
+            return;
         }
-        
-        function saveProgress(id, checked) {
-            const data = JSON.parse(localStorage.getItem('pcm-progress') || '{}');
-            data[id] = checked;
-            localStorage.setItem('pcm-progress', JSON.stringify(data));
-            updateProgress();
+
+        // Normal stream with subjects
+        stream.subjects.forEach(subKey => {
+            const meta = subjectMeta[subKey] || { label: subKey, emoji: '📖', color: 'bg-gray-500' };
+            const div = document.createElement('div');
+            div.className = 'subject-card glass-strong rounded-2xl p-8 text-center';
+            div.innerHTML = `
+                <div class="text-5xl mb-4">${meta.emoji}</div>
+                <h3 class="text-white font-bold text-2xl mb-2">${meta.label}</h3>
+                <div class="mt-4 rounded-xl px-4 py-2 text-sm font-semibold inline-block" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(6,182,212,0.3));border:1px solid rgba(6,182,212,0.4);color:#67e8f9;">View Chapters →</div>
+            `;
+            div.onclick = () => loadChaptersPage(streamKey, subKey);
+            container.appendChild(div);
+        });
+    }
+
+    function loadChaptersPage(streamKey, subjectKey) {
+        currentSubject = subjectKey;
+        currentStreamKey = streamKey; // store for adv pyq logic
+        const meta = subjectMeta[subjectKey] || { label: subjectKey, emoji: '📖', color: 'bg-gray-500' };
+        document.getElementById('chapter-title').textContent = `${meta.emoji} ${meta.label}`;
+        document.getElementById('chapter-back-btn').onclick = () => showPage('page-stream', streamKey);
+
+        const subChapters = chapters[subjectKey];
+        const content = document.getElementById('chapter-content');
+        content.innerHTML = '';
+
+        if (!subChapters) {
+            content.innerHTML = '<div class="glass rounded-2xl p-8 text-white text-center"><p class="text-xl">Chapters coming soon! 📚</p></div>';
+            showPage('page-chapters', null);
+            return;
         }
-        
-        function loadProgress() {
-            const data = JSON.parse(localStorage.getItem('pcm-progress') || '{}');
-            Object.keys(data).forEach(id => {
-                const checkbox = document.getElementById(id);
-                if (checkbox) {
-                    checkbox.checked = data[id];
-                }
-            });
-            updateProgress();
-        }
-        
-        function updateProgress() {
-            ['physics', 'chemistry', 'maths'].forEach(subject => {
-                [11, 12].forEach(cls => {
-                    const total = chapters[subject][cls].length * 3;
-                    let checked = 0;
-                    
-                    chapters[subject][cls].forEach((_, index) => {
-                        ['theory', 'revision', 'pyq'].forEach(type => {
-                            const id = `${subject}-${cls}-${index}-${type}`;
-                            const checkbox = document.getElementById(id);
-                            if (checkbox && checkbox.checked) checked++;
-                        });
-                    });
-                    
-                    const percentage = Math.round((checked / total) * 100);
-                    document.getElementById(`${subject}-${cls}-progress`).textContent = `${percentage}%`;
-                    document.getElementById(`${subject}-${cls}-bar`).style.width = `${percentage}%`;
+
+        [11, 12].forEach(cls => {
+            if (!subChapters[cls]) return;
+            const bar_color = '';
+            const block = document.createElement('div');
+            block.className = 'glass rounded-2xl p-6 mb-6 animate-fadeIn';
+            block.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-white">${meta.label} — Class ${cls}th</h2>
+                    <div class="text-white font-semibold" id="${subjectKey}-${cls}-progress">0%</div>
+                </div>
+                <div class="w-full rounded-full h-3 mb-4 progress-container" style="background:rgba(124,58,237,0.15)">
+                    <div class="progress-bar h-3 rounded-full" style="background:linear-gradient(90deg,#7c3aed,#06b6d4)" id="${subjectKey}-${cls}-bar" style="width:0%"></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-white">
+                        <thead>
+                            <tr class="border-b border-white border-opacity-30">
+                                <th class="text-left p-3">Chapter</th>
+                                <th class="text-center p-3">Theory</th>
+                                <th class="text-center p-3">Revision</th>
+                                <th class="text-center p-3">PYQs</th>
+                                ${['physics','chemistry','maths'].includes(subjectKey) && streamKey === 'science_maths' ? `<th class="text-center p-3" style="color:#fbbf24;white-space:nowrap;">⭐ Adv. PYQ</th>` : ''}
+                            </tr>
+                        </thead>
+                        <tbody id="${subjectKey}-${cls}-body"></tbody>
+                    </table>
+                </div>
+            `;
+            content.appendChild(block);
+            initializeTable(subjectKey, cls);
+        });
+
+        loadProgress();
+        showPage('page-chapters', null);
+    }
+
+    /* ===================== CHECKLIST LOGIC ===================== */
+    function createCheckbox(subject, cls, chapter, type) {
+        const id = `${subject}-${cls}-${chapter}-${type}`;
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'checkbox-custom';
+        cb.id = id;
+        cb.onchange = () => saveProgress(id, cb.checked);
+        return cb;
+    }
+
+    const PCM_SUBJECTS = ['physics', 'chemistry', 'maths'];
+
+    function initializeTable(subject, cls) {
+        const tbody = document.getElementById(`${subject}-${cls}-body`);
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        const hasAdvPYQ = PCM_SUBJECTS.includes(subject) && currentStreamKey === 'science_maths';
+        chapters[subject][cls].forEach((chapter, index) => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-white border-opacity-20';
+            row.innerHTML = `
+                <td class="p-3">${index + 1}. ${chapter}</td>
+                <td class="text-center p-3"></td>
+                <td class="text-center p-3"></td>
+                <td class="text-center p-3"></td>
+                ${hasAdvPYQ ? `<td class="text-center p-3"></td>` : ''}
+            `;
+            row.cells[1].appendChild(createCheckbox(subject, cls, index, 'theory'));
+            row.cells[2].appendChild(createCheckbox(subject, cls, index, 'revision'));
+            row.cells[3].appendChild(createCheckbox(subject, cls, index, 'pyq'));
+            if (hasAdvPYQ) {
+                const advCb = createCheckbox(subject, cls, index, 'advpyq');
+                // Style the adv pyq checkbox with gold accent
+                advCb.style.accentColor = '#f59e0b';
+                row.cells[4].appendChild(advCb);
+            }
+            tbody.appendChild(row);
+        });
+    }
+
+    function saveProgress(id, checked) {
+        const data = JSON.parse(localStorage.getItem('k4hav-progress') || '{}');
+        data[id] = checked;
+        localStorage.setItem('k4hav-progress', JSON.stringify(data));
+        updateProgressForCurrent();
+    }
+
+    function loadProgress() {
+        const data = JSON.parse(localStorage.getItem('k4hav-progress') || '{}');
+        Object.keys(data).forEach(id => {
+            const cb = document.getElementById(id);
+            if (cb) cb.checked = data[id];
+        });
+        updateProgressForCurrent();
+    }
+
+    function updateProgressForCurrent() {
+        if (!currentSubject || !chapters[currentSubject]) return;
+        const hasAdvPYQ = PCM_SUBJECTS.includes(currentSubject) && currentStreamKey === 'science_maths';
+        const types = hasAdvPYQ ? ['theory', 'revision', 'pyq', 'advpyq'] : ['theory', 'revision', 'pyq'];
+        [11, 12].forEach(cls => {
+            if (!chapters[currentSubject][cls]) return;
+            const total = chapters[currentSubject][cls].length * types.length;
+            let checked = 0;
+            chapters[currentSubject][cls].forEach((_, index) => {
+                types.forEach(type => {
+                    const cb = document.getElementById(`${currentSubject}-${cls}-${index}-${type}`);
+                    if (cb && cb.checked) checked++;
                 });
             });
+            const pct = Math.round((checked / total) * 100);
+            const prog = document.getElementById(`${currentSubject}-${cls}-progress`);
+            const bar = document.getElementById(`${currentSubject}-${cls}-bar`);
+            if (prog) prog.textContent = `${pct}%`;
+            if (bar) bar.style.width = `${pct}%`;
+        });
+    }
+
+    function resetProgress() {
+        if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+            localStorage.removeItem('k4hav-progress');
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateProgressForCurrent();
         }
-        
-        function switchTab(subject) {
-            document.querySelectorAll('.content-area').forEach(area => area.classList.add('hidden'));
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(`${subject}-content`).classList.remove('hidden');
-            document.getElementById(`tab-${subject}`).classList.add('active');
+    }
+
+    const roadmapsStatic = {
+        video: {
+            title: '🎬 Video Editing Roadmap',
+            containerId: 'video-roadmap-container',
+            phases: [
+                { title: '📌 Phase 1 — Basics & Concepts (Week 1–2)', color: 'text-yellow-200', steps: [
+                    { title: '1. Video Fundamentals', desc: 'Frame rate (24fps, 30fps, 60fps), Resolution (720p, 1080p, 4K), Aspect Ratio, Codecs (H.264, H.265), File formats (MP4, MOV, MKV)' },
+                    { title: '2. Choose Your Software', desc: 'Beginners: CapCut / iMovie / DaVinci Resolve (free). Intermediate: Adobe Premiere Pro. Pro: DaVinci Resolve Studio / Final Cut Pro' },
+                    { title: '3. Basic Editing Skills', desc: 'Cutting & trimming clips, Timeline editing, Adding transitions, Basic colour correction, Adding text & titles' }
+                ]},
+                { title: '📌 Phase 2 — Intermediate Skills (Week 3–6)', color: 'text-green-200', steps: [
+                    { title: '4. Audio Editing', desc: 'Noise removal, Audio levels & mixing, Adding background music, Syncing audio with video, Voice-over recording' },
+                    { title: '5. Colour Grading', desc: 'LUTs (Look-Up Tables), Wheels & curves, Cinematic colour grading, Skin tone correction, Node-based grading in DaVinci' },
+                    { title: '6. Motion Graphics Basics', desc: 'Keyframe animation, Lower thirds, Animated titles, Intro/Outro animations (After Effects basics)' },
+                    { title: '7. Short-Form Editing (Reels / Shorts)', desc: 'Beat sync editing, Jump cuts, Fast paced cuts, Vertical format (9:16), Caption animations, Trending hooks' }
+                ]},
+                { title: '📌 Phase 3 — Advanced & Pro Level (Week 7–12)', color: 'text-blue-200', steps: [
+                    { title: '8. After Effects — VFX & Motion', desc: 'Motion tracking, Green screen / Chroma key, Particle effects, 3D camera, Expressions (basic scripting), Plugin use (Trapcode, Video Copilot)' },
+                    { title: '9. Advanced DaVinci Resolve', desc: 'Fusion (node-based compositing), Advanced colour grading, Multi-camera editing, Fairlight audio studio' },
+                    { title: '10. Export & Delivery', desc: 'Export settings for YouTube, Instagram, Client delivery. Compression without quality loss. Proxies for heavy footage.' },
+                    { title: '11. Build Portfolio & Freelance', desc: 'Create a YouTube/Instagram portfolio, List on Fiverr / Upwork / Topmate, Network with creators and brands, Build a client base' }
+                ]},
+                { title: '🎓 Best Resources', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'YouTube: Premiere Gal, Cinecom.net, Justin Odisho, Bai Edits | Tools: DaVinci Resolve (free), CapCut, Premiere Pro | Practice: Edit 1 video per week for 3 months' }
+                ]}
+            ]
+        },
+        cyber: {
+            title: '🔐 Cyber Security Roadmap',
+            containerId: 'cyber-roadmap-container',
+            phases: [
+                { title: '📌 Phase 1 — Foundations (Month 1–2)', color: 'text-yellow-200', steps: [
+                    { title: 'Chapter 1 — Networking Fundamentals', desc: 'OSI Model, TCP/IP stack, DNS, DHCP, HTTP/HTTPS, FTP, Subnetting & IP addressing, Ports & Protocols, Firewalls & Routers' },
+                    { title: 'Chapter 2 — Operating Systems', desc: 'Linux basics (Kali Linux, Ubuntu), File system, User permissions, Bash scripting, Windows security model, Command Line proficiency' },
+                    { title: 'Chapter 3 — Core Security Concepts', desc: 'CIA Triad (Confidentiality, Integrity, Availability), Authentication & Authorization, Cryptography basics (Symmetric, Asymmetric, Hashing), SSL/TLS, PKI' },
+                    { title: 'Chapter 4 — Programming for Security', desc: 'Python basics for automation, Bash scripting, Basic web (HTML, JS) understanding for web attacks' }
+                ]},
+                { title: '📌 Phase 2 — Ethical Hacking Basics (Month 3–4)', color: 'text-green-200', steps: [
+                    { title: 'Chapter 5 — Reconnaissance', desc: 'Passive recon: OSINT, Google Dorking, Shodan, Maltego. Active recon: Nmap, Netcat, Whois, Traceroute' },
+                    { title: 'Chapter 6 — Scanning & Enumeration', desc: 'Port scanning (Nmap), Service enumeration, Vulnerability scanning (Nessus, OpenVAS), Banner grabbing' },
+                    { title: 'Chapter 7 — Web Application Security', desc: 'OWASP Top 10, SQL Injection, XSS (Cross-Site Scripting), CSRF, IDOR, Command Injection, File Upload vulnerabilities, Burp Suite usage' },
+                    { title: 'Chapter 8 — System Exploitation', desc: 'Metasploit Framework, Exploiting known CVEs, Password attacks (Hydra, Hashcat, John the Ripper), Privilege escalation (Linux & Windows)' }
+                ]},
+                { title: '📌 Phase 3 — Intermediate Pentesting (Month 5–6)', color: 'text-blue-200', steps: [
+                    { title: 'Chapter 9 — Network Pentesting', desc: 'Man-in-the-Middle attacks, ARP Spoofing, Packet sniffing (Wireshark), Wi-Fi attacks (WPA2 cracking, Evil Twin), MITM with Ettercap' },
+                    { title: 'Chapter 10 — Social Engineering', desc: 'Phishing attacks, Spear phishing, Vishing & Smishing, SET (Social Engineering Toolkit), Human factor in security' },
+                    { title: 'Chapter 11 — Post Exploitation', desc: 'Persistence techniques, Lateral movement, Data exfiltration, Covering tracks, Pivoting between networks' },
+                    { title: 'Chapter 12 — CTF (Capture The Flag)', desc: 'Practice on TryHackMe, HackTheBox, PicoCTF, CTFtime.org. Categories: Web, Forensics, Cryptography, Reverse Engineering, OSINT, Pwn' }
+                ]},
+                { title: '📌 Phase 4 — Advanced & Specialization (Month 7–12)', color: 'text-pink-200', steps: [
+                    { title: 'Chapter 13 — Malware Analysis', desc: 'Static & dynamic analysis, Reverse engineering (Ghidra, IDA Free), Sandboxing (Any.run, Cuckoo), YARA rules' },
+                    { title: 'Chapter 14 — Digital Forensics', desc: 'Disk forensics (Autopsy, FTK), Memory forensics (Volatility), Log analysis, Chain of custody, Incident response' },
+                    { title: 'Chapter 15 — Cloud Security', desc: 'AWS/Azure/GCP security, IAM misconfigurations, S3 bucket vulnerabilities, Container security (Docker, Kubernetes), Serverless security' },
+                    { title: 'Chapter 16 — Certifications Path', desc: 'Beginner: CompTIA Security+, CEH | Intermediate: eJPT, OSCP (most respected) | Advanced: OSWP, CRTO, CRTE | Bug Bounty: HackerOne, Bugcrowd' }
+                ]},
+                { title: '🎓 Best Resources & Tools', color: 'text-white', steps: [
+                    { title: 'Resources', desc: 'Practice: TryHackMe (beginners), HackTheBox (intermediate), PicoCTF | Tools: Kali Linux, Burp Suite, Metasploit, Nmap, Wireshark, Gobuster | YouTube: John Hammond, NetworkChuck, IppSec' }
+                ]}
+            ]
         }
-        
-        function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-                localStorage.removeItem('pcm-progress');
-                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                updateProgress();
-            }
-        }
-        
-        // Initialize
-        ['physics', 'chemistry', 'maths'].forEach(subject => {
-            [11, 12].forEach(cls => {
-                initializeTable(subject, cls);
+    };
+
+    function renderStaticRoadmap(key) {
+        const rm = roadmapsStatic[key];
+        if (!rm) return;
+        const container = document.getElementById(rm.containerId);
+        if (!container) return;
+
+        container.innerHTML = `
+            <!-- Overall Progress -->
+            <div class="mb-8 glass-strong rounded-xl p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-lg">📊 Overall Progress</span>
+                    <span class="font-bold text-xl" id="static-${key}-pct">0%</span>
+                </div>
+                <div class="w-full rounded-full h-4 progress-container" style="background:rgba(124,58,237,0.15)">
+                    <div class="progress-bar h-4 rounded-full" style="background:linear-gradient(90deg,#7c3aed,#06b6d4)" id="static-${key}-bar" style="width:0%"></div>
+                </div>
+                <div class="flex gap-6 mt-3 text-sm opacity-80 justify-center">
+                    <span>📖 Learned &nbsp; ✏️ Practiced &nbsp; ✅ Done</span>
+                </div>
+            </div>
+            ${rm.phases.map((phase, pi) => `
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold mb-4 ${phase.color}">${phase.title}</h3>
+                    <div class="space-y-3 ml-2">
+                        ${phase.steps.map((step, si) => {
+                            const ids = {
+                                learned:   `skill-${key}-${pi}-${si}-learned`,
+                                practiced: `skill-${key}-${pi}-${si}-practiced`,
+                                done:      `skill-${key}-${pi}-${si}-done`
+                            };
+                            return `
+                            <div class="roadmap-step pb-4">
+                                <div class="flex flex-col sm:flex-row sm:items-start gap-3">
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-lg">${step.title}</h4>
+                                        <p class="opacity-80 text-sm mt-1">${step.desc}</p>
+                                    </div>
+                                    <div class="flex gap-4 items-center shrink-0 sm:pt-1">
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.learned}"
+                                                onchange="saveStaticSkillProgress('${ids.learned}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">📖</span>
+                                        </label>
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.practiced}"
+                                                onchange="saveStaticSkillProgress('${ids.practiced}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">✏️</span>
+                                        </label>
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.done}"
+                                                onchange="saveStaticSkillProgress('${ids.done}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">✅</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('')}
+            <div class="text-center mt-6">
+                <button onclick="resetStaticSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset Progress</button>
+            </div>
+        `;
+
+        loadStaticSkillProgress(key);
+    }
+
+    function saveStaticSkillProgress(id, checked, key) {
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        data[id] = checked;
+        localStorage.setItem('k4hav-skill-progress', JSON.stringify(data));
+        updateStaticSkillProgress(key);
+    }
+
+    function loadStaticSkillProgress(key) {
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        Object.keys(data).forEach(id => {
+            const cb = document.getElementById(id);
+            if (cb) cb.checked = data[id];
+        });
+        updateStaticSkillProgress(key);
+    }
+
+    function updateStaticSkillProgress(key) {
+        const rm = roadmapsStatic[key];
+        if (!rm) return;
+        let total = 0, checked = 0;
+        rm.phases.forEach((phase, pi) => {
+            phase.steps.forEach((step, si) => {
+                ['learned','practiced','done'].forEach(type => {
+                    total++;
+                    const cb = document.getElementById(`skill-${key}-${pi}-${si}-${type}`);
+                    if (cb && cb.checked) checked++;
+                });
             });
         });
-        
-        loadProgress();
+        const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+        const pctEl = document.getElementById(`static-${key}-pct`);
+        const barEl = document.getElementById(`static-${key}-bar`);
+        if (pctEl) pctEl.textContent = `${pct}%`;
+        if (barEl) barEl.style.width = `${pct}%`;
+    }
+
+    function resetStaticSkillProgress(key) {
+        if (!confirm('Reset progress for this roadmap?')) return;
+        const rm = roadmapsStatic[key];
+        if (!rm) return;
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        rm.phases.forEach((phase, pi) => {
+            phase.steps.forEach((step, si) => {
+                ['learned','practiced','done'].forEach(type => {
+                    const id = `skill-${key}-${pi}-${si}-${type}`;
+                    delete data[id];
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = false;
+                });
+            });
+        });
+        localStorage.setItem('k4hav-skill-progress', JSON.stringify(data));
+        updateStaticSkillProgress(key);
+    }
+    let currentRoadmapKey = null;
+
+    function showRoadmap(key) {
+        const rm = roadmaps[key];
+        if (!rm) return;
+        currentRoadmapKey = key;
+        document.getElementById('roadmap-title').textContent = rm.title;
+        const content = document.getElementById('roadmap-content');
+
+        // Build all steps list for progress tracking
+        let allStepIds = [];
+        rm.phases.forEach((phase, pi) => {
+            phase.steps.forEach((step, si) => {
+                ['learned','practiced','done'].forEach(type => {
+                    allStepIds.push(`skill-${key}-${pi}-${si}-${type}`);
+                });
+            });
+        });
+
+        content.innerHTML = `
+            <!-- Overall Progress -->
+            <div class="mb-8 glass-strong rounded-xl p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-lg">📊 Overall Progress</span>
+                    <span class="font-bold text-xl" id="roadmap-progress-pct">0%</span>
+                </div>
+                <div class="w-full rounded-full h-4 progress-container" style="background:rgba(124,58,237,0.15)">
+                    <div class="progress-bar h-4 rounded-full" style="background:linear-gradient(90deg,#7c3aed,#06b6d4)" id="roadmap-progress-bar" style="width:0%"></div>
+                </div>
+                <div class="flex gap-6 mt-3 text-sm opacity-80 justify-center">
+                    <span>📖 Learned &nbsp; ✏️ Practiced &nbsp; ✅ Done</span>
+                </div>
+            </div>
+
+            ${rm.phases.map((phase, pi) => `
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold mb-4 ${phase.color}">${phase.title}</h3>
+                    <div class="space-y-3 ml-2">
+                        ${phase.steps.map((step, si) => {
+                            const ids = {
+                                learned:   `skill-${key}-${pi}-${si}-learned`,
+                                practiced: `skill-${key}-${pi}-${si}-practiced`,
+                                done:      `skill-${key}-${pi}-${si}-done`
+                            };
+                            return `
+                            <div class="roadmap-step pb-4" id="stepblock-${key}-${pi}-${si}">
+                                <div class="flex flex-col sm:flex-row sm:items-start gap-3">
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-lg">${step.title}</h4>
+                                        <p class="opacity-80 text-sm mt-1">${step.desc}</p>
+                                    </div>
+                                    <div class="flex gap-4 items-center shrink-0 sm:pt-1">
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.learned}"
+                                                onchange="saveSkillProgress('${ids.learned}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">📖</span>
+                                        </label>
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.practiced}"
+                                                onchange="saveSkillProgress('${ids.practiced}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">✏️</span>
+                                        </label>
+                                        <label class="flex flex-col items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="checkbox-custom" id="${ids.done}"
+                                                onchange="saveSkillProgress('${ids.done}', this.checked, '${key}')">
+                                            <span class="text-xs opacity-70">✅</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('')}
+
+            <div class="text-center mt-6">
+                <button onclick="resetSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset Skill Progress</button>
+            </div>
+        `;
+
+        loadSkillProgress(key);
+        showPage('page-roadmap', null);
+    }
+
+    function saveSkillProgress(id, checked, key) {
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        data[id] = checked;
+        localStorage.setItem('k4hav-skill-progress', JSON.stringify(data));
+        updateSkillProgress(key);
+    }
+
+    function loadSkillProgress(key) {
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        Object.keys(data).forEach(id => {
+            const cb = document.getElementById(id);
+            if (cb) cb.checked = data[id];
+        });
+        updateSkillProgress(key);
+    }
+
+    function updateSkillProgress(key) {
+        const rm = roadmaps[key];
+        if (!rm) return;
+        let total = 0, checked = 0;
+        rm.phases.forEach((phase, pi) => {
+            phase.steps.forEach((step, si) => {
+                ['learned','practiced','done'].forEach(type => {
+                    total++;
+                    const cb = document.getElementById(`skill-${key}-${pi}-${si}-${type}`);
+                    if (cb && cb.checked) checked++;
+                });
+            });
+        });
+        const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+        const pctEl = document.getElementById('roadmap-progress-pct');
+        const barEl = document.getElementById('roadmap-progress-bar');
+        if (pctEl) pctEl.textContent = `${pct}%`;
+        if (barEl) barEl.style.width = `${pct}%`;
+    }
+
+    function resetSkillProgress(key) {
+        if (!confirm('Reset progress for this skill roadmap?')) return;
+        const rm = roadmaps[key];
+        if (!rm) return;
+        const data = JSON.parse(localStorage.getItem('k4hav-skill-progress') || '{}');
+        rm.phases.forEach((phase, pi) => {
+            phase.steps.forEach((step, si) => {
+                ['learned','practiced','done'].forEach(type => {
+                    const id = `skill-${key}-${pi}-${si}-${type}`;
+                    delete data[id];
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = false;
+                });
+            });
+        });
+        localStorage.setItem('k4hav-skill-progress', JSON.stringify(data));
+        updateSkillProgress(key);
+    }
+    /* ================================================
+       THEME ENGINE — auto-cycles + changes on refresh
+       ================================================ */
+    const THEMES = [
+        {
+            name: '🔮 Violet & Cyan',
+            c1: '#7c3aed', c2: '#06b6d4',
+            c1rgb: '124,58,237', c2rgb: '6,182,212',
+            bg: '#0a0118', bgMid: '#0d1b3e',
+            orb1: ['#7c3aed','#4c1d95'], orb2: ['#06b6d4','#0891b2'],
+            orb3: ['#8b5cf6','#06b6d4'], orb4: ['#a78bfa','#7c3aed'], orb5: ['#06b6d4','#8b5cf6'],
+            accent: '#c4b5fd', accent2: '#67e8f9',
+        },
+        {
+            name: '🔥 Crimson & Gold',
+            c1: '#dc2626', c2: '#f59e0b',
+            c1rgb: '220,38,38', c2rgb: '245,158,11',
+            bg: '#120000', bgMid: '#1c0a00',
+            orb1: ['#dc2626','#7f1d1d'], orb2: ['#f59e0b','#b45309'],
+            orb3: ['#ef4444','#f59e0b'], orb4: ['#fca5a5','#dc2626'], orb5: ['#fbbf24','#ef4444'],
+            accent: '#fca5a5', accent2: '#fde68a',
+        },
+        {
+            name: '🌊 Ocean & Emerald',
+            c1: '#0ea5e9', c2: '#10b981',
+            c1rgb: '14,165,233', c2rgb: '16,185,129',
+            bg: '#000f18', bgMid: '#001a1a',
+            orb1: ['#0ea5e9','#0c4a6e'], orb2: ['#10b981','#064e3b'],
+            orb3: ['#38bdf8','#34d399'], orb4: ['#7dd3fc','#0ea5e9'], orb5: ['#6ee7b7','#10b981'],
+            accent: '#bae6fd', accent2: '#6ee7b7',
+        },
+        {
+            name: '🌸 Pink & Indigo',
+            c1: '#ec4899', c2: '#6366f1',
+            c1rgb: '236,72,153', c2rgb: '99,102,241',
+            bg: '#100010', bgMid: '#0d0030',
+            orb1: ['#ec4899','#831843'], orb2: ['#6366f1','#3730a3'],
+            orb3: ['#f472b6','#818cf8'], orb4: ['#f9a8d4','#ec4899'], orb5: ['#a5b4fc','#6366f1'],
+            accent: '#f9a8d4', accent2: '#c7d2fe',
+        },
+        {
+            name: '☢️ Neon Green & Purple',
+            c1: '#22c55e', c2: '#a855f7',
+            c1rgb: '34,197,94', c2rgb: '168,85,247',
+            bg: '#010d00', bgMid: '#0d001a',
+            orb1: ['#22c55e','#14532d'], orb2: ['#a855f7','#581c87'],
+            orb3: ['#4ade80','#c084fc'], orb4: ['#86efac','#22c55e'], orb5: ['#e879f9','#a855f7'],
+            accent: '#86efac', accent2: '#e9d5ff',
+        },
+        {
+            name: '🌅 Sunset Orange & Rose',
+            c1: '#f97316', c2: '#f43f5e',
+            c1rgb: '249,115,22', c2rgb: '244,63,94',
+            bg: '#120800', bgMid: '#1a0010',
+            orb1: ['#f97316','#7c2d12'], orb2: ['#f43f5e','#881337'],
+            orb3: ['#fb923c','#fb7185'], orb4: ['#fdba74','#f97316'], orb5: ['#fda4af','#f43f5e'],
+            accent: '#fed7aa', accent2: '#fecdd3',
+        },
+    ];
+
+    // Pick random theme on each refresh, then auto-cycle
+    let currentThemeIdx = Math.floor(Math.random() * THEMES.length);
+
+    function applyTheme(idx, animate = true) {
+        const t = THEMES[idx];
+        const root = document.documentElement;
+
+        root.style.setProperty('--c1', t.c1);
+        root.style.setProperty('--c2', t.c2);
+        root.style.setProperty('--c1-soft', `rgba(${t.c1rgb},0.3)`);
+        root.style.setProperty('--c2-soft', `rgba(${t.c2rgb},0.3)`);
+        root.style.setProperty('--c1-faint', `rgba(${t.c1rgb},0.12)`);
+        root.style.setProperty('--c2-faint', `rgba(${t.c2rgb},0.12)`);
+        root.style.setProperty('--bg-deep', t.bg);
+        root.style.setProperty('--text-accent', t.accent);
+        root.style.setProperty('--text-accent2', t.accent2);
+
+        document.body.style.background = t.bg;
+        document.getElementById('bg-canvas').style.background =
+            `linear-gradient(135deg, ${t.bg} 0%, ${t.bgMid} 50%, ${t.bg} 100%)`;
+
+        const setOrb = (id, colors) => {
+            const el = document.getElementById(id);
+            if (el) el.style.background = `radial-gradient(circle, ${colors[0]}, ${colors[1]})`;
+        };
+        setOrb('orb1', t.orb1); setOrb('orb2', t.orb2);
+        setOrb('orb3', t.orb3); setOrb('orb4', t.orb4); setOrb('orb5', t.orb5);
+
+        // Update progress bars
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            bar.style.background = `linear-gradient(90deg,${t.c1},${t.c2})`;
+        });
+
+        // Update mouse glow
+        const mg = document.getElementById('mouse-glow');
+        if (mg) mg.style.background = `radial-gradient(circle, rgba(${t.c1rgb},0.15) 0%, transparent 70%)`;
+
+        // Toast
+        if (animate) showThemeToast(t.name);
+
+        // Dots
+        document.querySelectorAll('.theme-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === idx);
+            d.style.background = i === idx ? THEMES[i].c1 : 'rgba(255,255,255,0.2)';
+        });
+
+        // Update particle colors
+        particleC1 = t.c1; particleC2 = t.c2;
+    }
+
+    function showThemeToast(name) {
+        const toast = document.getElementById('theme-toast');
+        toast.textContent = name;
+        toast.style.background = `linear-gradient(135deg, rgba(${THEMES[currentThemeIdx].c1rgb},0.3), rgba(${THEMES[currentThemeIdx].c2rgb},0.3))`;
+        toast.classList.remove('show');
+        void toast.offsetWidth; // reflow
+        toast.classList.add('show');
+    }
+
+    function nextTheme() {
+        currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
+        applyTheme(currentThemeIdx);
+    }
+
+    // Build theme dots
+    const dotsEl = document.getElementById('theme-dots');
+    THEMES.forEach((t, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'theme-dot';
+        dot.title = t.name;
+        dot.style.background = t.c1;
+        dot.onclick = () => { currentThemeIdx = i; applyTheme(i); clearInterval(themeInterval); themeInterval = setInterval(nextTheme, 12000); };
+        dotsEl.appendChild(dot);
+    });
+
+    // Apply initial (random) theme
+    applyTheme(currentThemeIdx, false);
+    setTimeout(() => showThemeToast(THEMES[currentThemeIdx].name), 800);
+
+    // Auto-cycle every 12 seconds
+    let themeInterval = setInterval(nextTheme, 12000);
+
+    /* ================================================
+       MOUSE GLOW FOLLOWER
+       ================================================ */
+    const mouseGlow = document.getElementById('mouse-glow');
+    document.addEventListener('mousemove', e => {
+        mouseGlow.style.left = e.clientX + 'px';
+        mouseGlow.style.top  = e.clientY + 'px';
+    });
+
+    /* ================================================
+       CLICK RIPPLE
+       ================================================ */
+    document.addEventListener('click', e => {
+        if (e.target.tagName === 'INPUT') return;
+        const r = document.createElement('div');
+        r.className = 'ripple';
+        r.style.left = e.clientX + 'px';
+        r.style.top  = e.clientY + 'px';
+        document.body.appendChild(r);
+        setTimeout(() => r.remove(), 900);
+    });
+
+    /* ================================================
+       PARTICLE SYSTEM (canvas)
+       ================================================ */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx2 = canvas.getContext('2d');
+    let particleC1 = THEMES[currentThemeIdx].c1;
+    let particleC2 = THEMES[currentThemeIdx].c2;
+
+    function hexToRgb(hex) {
+        const r = parseInt(hex.slice(1,3),16);
+        const g = parseInt(hex.slice(3,5),16);
+        const b = parseInt(hex.slice(5,7),16);
+        return {r,g,b};
+    }
+
+    function resizeCanvas() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height + 20;
+            this.size = Math.random() * 3 + 1;
+            this.speedY = -(Math.random() * 1.2 + 0.4);
+            this.speedX = (Math.random() - 0.5) * 0.8;
+            this.opacity = 0;
+            this.maxOpacity = Math.random() * 0.7 + 0.3;
+            this.fadeIn = true;
+            this.life = 0;
+            this.maxLife = Math.random() * 200 + 150;
+            this.useC1 = Math.random() > 0.5;
+            this.shape = Math.random() > 0.6 ? 'star' : 'circle';
+        }
+        update() {
+            this.x += this.speedX; this.y += this.speedY; this.life++;
+            const progress = this.life / this.maxLife;
+            if (progress < 0.15) this.opacity = (progress / 0.15) * this.maxOpacity;
+            else if (progress > 0.75) this.opacity = ((1 - progress) / 0.25) * this.maxOpacity;
+            else this.opacity = this.maxOpacity;
+            if (this.life >= this.maxLife || this.y < -20) this.reset();
+        }
+        draw() {
+            const c = hexToRgb(this.useC1 ? particleC1 : particleC2);
+            ctx2.save();
+            ctx2.globalAlpha = this.opacity;
+            ctx2.fillStyle = `rgba(${c.r},${c.g},${c.b},1)`;
+            ctx2.shadowBlur = 8; ctx2.shadowColor = `rgba(${c.r},${c.g},${c.b},0.8)`;
+            if (this.shape === 'star') {
+                ctx2.translate(this.x, this.y);
+                ctx2.beginPath();
+                for (let i = 0; i < 5; i++) {
+                    ctx2.lineTo(Math.cos((18 + i*72)*Math.PI/180)*this.size, Math.sin((18 + i*72)*Math.PI/180)*this.size);
+                    ctx2.lineTo(Math.cos((54 + i*72)*Math.PI/180)*this.size*0.4, Math.sin((54 + i*72)*Math.PI/180)*this.size*0.4);
+                }
+                ctx2.closePath(); ctx2.fill();
+            } else {
+                ctx2.beginPath(); ctx2.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx2.fill();
+            }
+            ctx2.restore();
+        }
+    }
+
+    const particles = Array.from({length: 80}, () => {
+        const p = new Particle();
+        p.y = Math.random() * canvas.height; // start scattered
+        p.life = Math.floor(Math.random() * p.maxLife);
+        return p;
+    });
+
+    function animateParticles() {
+        ctx2.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ================================================
+       SUPPORT US — UPI PAYMENT (Fixed)
+       ================================================ */
+    const UPI_ID   = 'itskeshav@upi';
+    const UPI_NAME = 'K4hav';
+    let selectedAmount = '';
+
+    /* --- UPI Deep-link builder ---
+       Uses standard upi:// intent which opens app-picker on Android,
+       plus app-specific schemes for direct launch.                    */
+    function buildUpiUrl(scheme) {
+        const amt = selectedAmount ? `&am=${selectedAmount}` : '';
+        const tn  = encodeURIComponent('Support K4hav');
+        const pn  = encodeURIComponent(UPI_NAME);
+        const base = `pa=${UPI_ID}&pn=${pn}&cu=INR${amt}&tn=${tn}`;
+        switch (scheme) {
+            case 'phonepe': return `phonepe://pay?${base}`;
+            case 'gpay':    return `tez://upi/pay?${base}`;
+            case 'paytm':   return `paytmmp://pay?${base}`;
+            case 'amazon':  return `amazonpay://pay?${base}`;
+            default:        return `upi://pay?${base}`;
+        }
+    }
+
+    /* Fire the deep-link via hidden anchor (works in mobile Chrome/Safari) */
+    function payWith(scheme) {
+        const url = buildUpiUrl(scheme);
+        const a = document.createElement('a');
+        a.href = url;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => document.body.removeChild(a), 1000);
+    }
+
+    /* Amount selector */
+    function selectAmount(amt, el) {
+        selectedAmount = amt;
+        document.querySelectorAll('.amount-btn').forEach(b => {
+            b.style.background = '';
+            b.style.color = 'var(--text-accent)';
+            b.style.boxShadow = '';
+            b.style.border = '1px solid var(--c1-soft)';
+        });
+        el.style.background = 'linear-gradient(135deg,var(--c1),var(--c2))';
+        el.style.color = '#fff';
+        el.style.boxShadow = '0 0 18px var(--c1-soft)';
+        generateQR();
+    }
+
+    /* QR Code — pure inline JS, no CDN needed */
+    function generateQR() {
+        const qrDiv = document.getElementById('upi-qr');
+        if (!qrDiv) return;
+        const amt = selectedAmount ? `&am=${selectedAmount}` : '';
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&cu=INR${amt}&tn=${encodeURIComponent('Support K4hav')}`;
+
+        /* Use Google Chart API to render QR as <img> — works offline-friendly */
+        const encoded = encodeURIComponent(upiUrl);
+        const src = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encoded}&choe=UTF-8&chld=M|2`;
+
+        qrDiv.innerHTML = `
+            <div style="background:#fff;border-radius:12px;padding:8px;display:inline-block;">
+                <img src="${src}" width="200" height="200" alt="UPI QR"
+                     style="display:block;border-radius:8px;"
+                     onerror="this.parentElement.parentElement.innerHTML=fallbackQR()">
+            </div>`;
+    }
+
+    function fallbackQR() {
+        return `<div style="width:216px;height:216px;display:flex;flex-direction:column;
+            align-items:center;justify-content:center;border-radius:12px;
+            border:2px dashed rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);
+            padding:16px;text-align:center;">
+            <div style="font-size:36px;margin-bottom:8px;">📲</div>
+            <div style="color:#fbbf24;font-weight:700;font-size:14px;">itskeshav@upi</div>
+            <div style="color:#94a3b8;font-size:11px;margin-top:6px;">Open any UPI app &amp; pay manually</div>
+        </div>`;
+    }
+
     </script>
+    </div><!-- /main-wrap -->
 </body>
 </html>
-
-
-
