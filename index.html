@@ -390,6 +390,340 @@
         .animate-fadeIn { animation:fadeIn 0.6s ease-out; }
         .page { display:none; }
         .page.active { display:block; animation:fadeIn 0.5s ease-out; }
+
+        /* ========== AI CHATBOT ========== */
+        @keyframes aiPulseRing {
+            0%   { transform:scale(1);   opacity:1; }
+            100% { transform:scale(2.2); opacity:0; }
+        }
+        @keyframes aiBtnFloat {
+            0%,100% { transform:translateY(0px) rotate(0deg); }
+            25%     { transform:translateY(-6px) rotate(-3deg); }
+            75%     { transform:translateY(-3px) rotate(3deg); }
+        }
+        @keyframes msgPop {
+            from { opacity:0; transform:scale(0.85) translateY(8px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+        @keyframes typingBlink {
+            0%,80%,100% { transform:scale(0.5); opacity:0.3; }
+            40%         { transform:scale(1.1); opacity:1; }
+        }
+        @keyframes shimmerSlide {
+            0%   { left:-100%; }
+            100% { left:100%; }
+        }
+        @keyframes providerPulse {
+            0%,100% { box-shadow:0 0 0 0 var(--c1-soft); }
+            50%     { box-shadow:0 0 0 6px transparent; }
+        }
+        @keyframes panelEntrance {
+            0%   { opacity:0; transform:translateY(30px) scale(0.88); filter:blur(6px); }
+            60%  { opacity:1; filter:blur(0); }
+            80%  { transform:translateY(-6px) scale(1.01); }
+            100% { transform:translateY(0) scale(1); }
+        }
+        @keyframes sparkleFloat {
+            0%   { transform:translateY(0) scale(0); opacity:0; }
+            30%  { opacity:1; }
+            100% { transform:translateY(-60px) scale(1.2); opacity:0; }
+        }
+        @keyframes headerGlow {
+            0%,100% { box-shadow:0 0 20px rgba(236,72,153,0.2) inset; }
+            50%     { box-shadow:0 0 40px rgba(124,58,237,0.3) inset; }
+        }
+        @keyframes girldance {
+            0%,100% { transform:rotate(-2deg) scale(1); }
+            50%     { transform:rotate(2deg) scale(1.04); }
+        }
+
+        /* --- Floating Button --- */
+        #ai-fab-wrap {
+            position:fixed; bottom:100px; left:22px; z-index:9998;
+            display:flex; flex-direction:column; align-items:center; gap:6px;
+        }
+        #ai-fab-label {
+            background:linear-gradient(135deg,var(--c1),#ec4899,var(--c2));
+            color:#fff; font-size:11px; font-weight:800;
+            padding:4px 12px; border-radius:20px; letter-spacing:0.08em;
+            box-shadow:0 2px 16px rgba(236,72,153,0.4); white-space:nowrap;
+            animation:aiBtnFloat 4s ease-in-out infinite;
+            border:1px solid rgba(255,255,255,0.15);
+        }
+        /* wrapper holds rings WITHOUT overflow:hidden */
+        #ai-btn-ring-wrap {
+            position:relative;
+            width:130px; height:130px;
+            display:flex; align-items:center; justify-content:center;
+            animation:aiBtnFloat 4s ease-in-out infinite;
+        }
+        #ai-chat-btn {
+            width:68px; height:68px; border-radius:50%; border:2px solid rgba(236,72,153,0.7); cursor:pointer;
+            background:linear-gradient(135deg,#6d28d9 0%,#ec4899 50%,var(--c2) 100%);
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 0 20px rgba(236,72,153,0.6), 0 0 40px rgba(124,58,237,0.4);
+            transition:all 0.3s; position:relative;
+            overflow:hidden; padding:0; flex-shrink:0;
+            z-index:3;
+        }
+        #ai-chat-btn:hover { transform:scale(1.1); }
+        /* rings perfectly centered via absolute + translate */
+        .pulse-ring, .pulse-ring2, .pulse-ring3 {
+            position:absolute;
+            border-radius:50%;
+            pointer-events:none;
+            top:50%; left:50%;
+            transform:translate(-50%,-50%);
+        }
+        .pulse-ring  {
+            width:88px; height:88px;
+            border:2px solid rgba(236,72,153,0.55);
+            animation:rippleExpand 2.1s ease-out infinite 0s;
+        }
+        .pulse-ring2 {
+            width:88px; height:88px;
+            border:2px solid rgba(124,58,237,0.5);
+            animation:rippleExpand 2.1s ease-out infinite 0.7s;
+        }
+        .pulse-ring3 {
+            width:88px; height:88px;
+            border:2px solid rgba(6,182,212,0.4);
+            animation:rippleExpand 2.1s ease-out infinite 1.4s;
+        }
+        @keyframes rippleExpand {
+            0%   { width:72px; height:72px; opacity:0.9; }
+            100% { width:130px; height:130px; opacity:0; }
+        }
+        #ai-chat-btn .pulse-ring {
+            position:absolute; inset:-4px; border-radius:50%;
+            border:2px solid var(--c1); animation:aiPulseRing 2s ease-out infinite;
+        }
+        #ai-chat-btn .pulse-ring2 {
+            position:absolute; inset:-4px; border-radius:50%;
+            border:2px solid var(--c2); animation:aiPulseRing 2s ease-out infinite 1s;
+        }
+        #ai-chat-btn .notif {
+            position:absolute; top:0; right:0;
+            width:16px; height:16px; border-radius:50%;
+            background:#22c55e; border:2.5px solid #0a0118;
+            font-size:9px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;
+        }
+
+        /* --- Panel --- */
+        #ai-panel {
+            position:fixed; bottom:190px; left:22px; z-index:9997;
+            width:370px; max-width:calc(100vw - 44px);
+            border-radius:22px; overflow:hidden;
+            background:rgba(6,2,20,0.94);
+            backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+            border:1px solid rgba(124,58,237,0.4);
+            box-shadow:0 24px 70px rgba(0,0,0,0.8), 0 0 60px var(--c1-faint), inset 0 1px 0 rgba(255,255,255,0.06);
+            display:none; flex-direction:column;
+            animation:msgPop 0.3s ease;
+            max-height:580px;
+            transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        #ai-panel.open { display:flex; animation:panelEntrance 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+        #ai-panel.expanded {
+            width: min(760px, calc(100vw - 32px));
+            max-height: calc(100vh - 80px);
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 24px;
+        }
+        #ai-panel.expanded #chat-msgs { max-height: calc(100vh - 420px); min-height: 300px; }
+        #ai-expand-btn {
+            background:rgba(255,255,255,0.06); border:none; cursor:pointer;
+            width:28px; height:28px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            color:#94a3b8; font-size:13px; transition:all 0.2s;
+            flex-shrink:0;
+        }
+        #ai-expand-btn:hover { background:var(--c1-faint); color:var(--text-accent); border:1px solid var(--c1-soft); }
+
+        /* Panel Header */
+        .aip-header {
+            padding:14px 16px 12px;
+            background:linear-gradient(135deg,rgba(109,40,217,0.25),rgba(236,72,153,0.15),rgba(6,182,212,0.1));
+            border-bottom:1px solid rgba(236,72,153,0.25);
+            display:flex; align-items:center; gap:10px; position:relative; overflow:hidden;
+            animation:headerGlow 3s ease-in-out infinite;
+        }
+        .aip-header::before {
+            content:""; position:absolute; top:0; left:-100%; width:60%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);
+            animation:shimmerSlide 4s infinite;
+        }
+        .aip-avatar {
+            width:50px; height:50px; border-radius:50%;
+            background:linear-gradient(135deg,#7c3aed,#ec4899,var(--c2));
+            display:flex; align-items:center; justify-content:center;
+            flex-shrink:0; position:relative; overflow:hidden;
+            box-shadow:0 0 20px rgba(236,72,153,0.6), 0 0 40px var(--c1-soft);
+            border:2px solid rgba(236,72,153,0.5);
+            animation:girldance 3s ease-in-out infinite;
+        }
+        .aip-avatar .av-status {
+            position:absolute; bottom:1px; right:1px;
+            width:11px; height:11px; border-radius:50%;
+            background:#22c55e; border:2px solid #060214;
+        }
+        .aip-info { flex:1; min-width:0; }
+        .aip-name { font-weight:800; color:#e2d9f3; font-size:14px; letter-spacing:0.02em; }
+        .aip-sub  { font-size:10.5px; color:#22c55e; margin-top:1px; }
+        .aip-provider-badge {
+            font-size:10px; padding:2px 8px; border-radius:20px;
+            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+            color:#94a3b8; cursor:pointer; transition:all 0.2s;
+        }
+        .aip-provider-badge:hover { border-color:var(--c1); color:var(--text-accent); }
+        .aip-close {
+            background:none; border:none; cursor:pointer;
+            width:28px; height:28px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            color:#64748b; font-size:14px; transition:all 0.2s;
+            background:rgba(255,255,255,0.05);
+        }
+        .aip-close:hover { background:rgba(239,68,68,0.15); color:#fca5a5; }
+
+        /* Provider Selector */
+        #ai-provider-panel {
+            border-bottom:1px solid rgba(124,58,237,0.2);
+            background:rgba(0,0,0,0.3); padding:12px;
+            display:none; flex-direction:column; gap:8px;
+        }
+        #ai-provider-panel.show { display:flex; }
+        .provider-title { font-size:11px; font-weight:700; color:#94a3b8; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px; }
+        .provider-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+        .provider-card {
+            border-radius:12px; padding:10px; cursor:pointer;
+            background:rgba(255,255,255,0.04);
+            border:1.5px solid rgba(255,255,255,0.08);
+            transition:all 0.22s; position:relative; overflow:hidden;
+        }
+        .provider-card:hover { border-color:var(--c1); background:var(--c1-faint); transform:translateY(-2px); }
+        .provider-card.active { border-color:var(--c1); background:rgba(124,58,237,0.15); animation:providerPulse 2s infinite; }
+        .provider-card .pv-name { font-size:12px; font-weight:700; color:#e2d9f3; }
+        .provider-card .pv-badge { font-size:9.5px; padding:1px 6px; border-radius:10px; font-weight:700; display:inline-block; margin-top:3px; }
+        .badge-free  { background:rgba(34,197,94,0.2);  color:#22c55e;  border:1px solid rgba(34,197,94,0.3); }
+        .badge-paid  { background:rgba(251,191,36,0.15); color:#fbbf24;  border:1px solid rgba(251,191,36,0.3); }
+        .provider-card .pv-desc { font-size:10px; color:#64748b; margin-top:4px; line-height:1.4; }
+        .pv-icon { font-size:20px; margin-bottom:4px; }
+        .provider-card.active .pv-check { display:block; }
+        .pv-check { display:none; position:absolute; top:6px; right:6px; color:#22c55e; font-size:12px; font-weight:900; }
+
+        /* API Key Input per provider */
+        #ai-key-area { padding:10px 12px; border-bottom:1px solid rgba(124,58,237,0.2); background:rgba(251,191,36,0.04); }
+        #ai-key-area .key-label { font-size:11px; font-weight:700; color:#fbbf24; margin-bottom:6px; }
+        #ai-key-area .key-hint  { font-size:10px; color:#64748b; margin-bottom:8px; line-height:1.5; }
+        #ai-key-area .key-hint a { color:#67e8f9; text-decoration:underline; cursor:pointer; }
+        .key-row { display:flex; gap:6px; }
+        #ai-api-input {
+            flex:1; padding:8px 10px; border-radius:8px;
+            background:rgba(255,255,255,0.06); border:1px solid rgba(124,58,237,0.3);
+            color:white; font-size:12px; outline:none; transition:border-color 0.2s;
+        }
+        #ai-api-input:focus { border-color:var(--c1); }
+        #ai-key-save {
+            padding:0 14px; border-radius:8px; border:none; cursor:pointer;
+            background:linear-gradient(135deg,var(--c1),var(--c2));
+            color:white; font-size:11px; font-weight:700; transition:opacity 0.2s; white-space:nowrap;
+        }
+        #ai-key-save:hover { opacity:0.8; }
+
+        /* Messages */
+        #chat-msgs {
+            flex:1; overflow-y:auto; padding:14px 12px;
+            display:flex; flex-direction:column; gap:10px;
+            min-height:160px; max-height:280px;
+        }
+        #chat-msgs::-webkit-scrollbar { width:3px; }
+        #chat-msgs::-webkit-scrollbar-thumb { background:var(--c1-soft); border-radius:2px; }
+        .cm { max-width:84%; animation:msgPop 0.22s ease; }
+        .cm.user { align-self:flex-end; }
+        .cm.bot  { align-self:flex-start; display:flex; gap:7px; align-items:flex-end; }
+        .cm.bot .bot-av { width:26px; height:26px; border-radius:50%; overflow:hidden; background:linear-gradient(135deg,#7c3aed,#ec4899); display:flex; align-items:center; justify-content:center; flex-shrink:0; border:1.5px solid rgba(236,72,153,0.4); }
+        .cm-bub {
+            padding:9px 13px; border-radius:14px;
+            font-size:13px; line-height:1.55; word-break:break-word;
+        }
+        .cm.user .cm-bub {
+            background:linear-gradient(135deg,var(--c1),rgba(139,92,246,0.7));
+            color:#fff; border-bottom-right-radius:4px;
+            box-shadow:0 4px 16px var(--c1-soft);
+        }
+        .cm.bot .cm-bub {
+            background:rgba(255,255,255,0.06); color:#e2d9f3;
+            border:1px solid rgba(124,58,237,0.2); border-bottom-left-radius:4px;
+        }
+        .cm-time { font-size:10px; color:#475569; margin-top:3px; }
+        .cm.user .cm-time { text-align:right; }
+        .cm-img { max-width:100%; border-radius:10px; margin-bottom:4px; border:1px solid rgba(124,58,237,0.3); }
+
+        /* Typing */
+        .typing-bub { display:flex; gap:5px; padding:10px 14px; }
+        .typing-bub span { width:7px; height:7px; border-radius:50%; background:var(--c2); display:inline-block; }
+        .typing-bub span:nth-child(1){animation:typingBlink 1.2s infinite 0s;}
+        .typing-bub span:nth-child(2){animation:typingBlink 1.2s infinite 0.2s;}
+        .typing-bub span:nth-child(3){animation:typingBlink 1.2s infinite 0.4s;}
+
+        /* Quick chips */
+        .chips-row { padding:0 12px 10px; display:flex; flex-wrap:wrap; gap:5px; }
+        .qchip {
+            padding:4px 11px; border-radius:20px; font-size:11px; cursor:pointer;
+            background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.3);
+            color:#c4b5fd; transition:all 0.2s; white-space:nowrap;
+        }
+        .qchip:hover { background:rgba(124,58,237,0.25); border-color:var(--c1); color:#fff; }
+
+        /* Image preview */
+        #img-preview-wrap {
+            padding:6px 12px 0; display:none;
+        }
+        #img-preview-wrap.show { display:block; }
+        .img-prev-inner {
+            position:relative; display:inline-block;
+        }
+        #img-preview { width:60px; height:60px; object-fit:cover; border-radius:10px; border:1.5px solid var(--c1); }
+        #img-remove {
+            position:absolute; top:-6px; right:-6px;
+            width:18px; height:18px; border-radius:50%; border:none;
+            background:#ef4444; color:#fff; font-size:10px; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; font-weight:900;
+        }
+
+        /* Input row */
+        #chat-input-row {
+            padding:10px 12px 14px; border-top:1px solid rgba(124,58,237,0.2);
+            display:flex; gap:7px; align-items:flex-end;
+        }
+        #img-upload-btn {
+            width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(124,58,237,0.35);
+            background:rgba(124,58,237,0.1); color:var(--text-accent); font-size:16px;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:all 0.2s; flex-shrink:0;
+        }
+        #img-upload-btn:hover { background:rgba(124,58,237,0.25); border-color:var(--c1); }
+        #chat-input-txt {
+            flex:1; padding:9px 12px; border-radius:12px; resize:none;
+            background:rgba(255,255,255,0.05); border:1px solid rgba(124,58,237,0.3);
+            color:white; font-size:13px; outline:none;
+            min-height:38px; max-height:80px; font-family:inherit;
+            transition:border-color 0.2s;
+        }
+        #chat-input-txt:focus { border-color:var(--c1); }
+        #chat-input-txt::placeholder { color:#475569; }
+        #chat-send-btn {
+            width:38px; height:38px; border-radius:50%; border:none; cursor:pointer;
+            background:linear-gradient(135deg,var(--c1),var(--c2));
+            color:#fff; font-size:15px; display:flex; align-items:center; justify-content:center;
+            transition:all 0.2s; flex-shrink:0;
+            box-shadow:0 4px 14px var(--c1-soft);
+        }
+        #chat-send-btn:hover { transform:scale(1.12); box-shadow:0 4px 20px var(--c2-soft); }
+        #chat-send-btn:disabled { opacity:0.35; transform:none; cursor:not-allowed; }
+        #file-input-hidden { display:none; }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-16">
@@ -459,7 +793,7 @@
             </div>
             <div onclick="showPage('page-help', null)" class="subject-card glass-strong rounded-2xl p-6 text-center">
                 <div class="text-5xl mb-4">💬</div>
-                <h3 class="text-white font-bold text-xl mb-2">Help</h3>
+                <h3 class="text-white font-bold text-xl mb-2">Connect Me</h3>
                 <p style="color:#94a3b8;font-size:0.85rem;">GitHub · X · Instagram · Telegram</p>
             </div>
             <div onclick="showPage('page-support', null)" class="subject-card glass-strong rounded-2xl p-6 text-center" style="border:1px solid rgba(251,191,36,0.35);">
@@ -1788,7 +2122,7 @@
        SUPPORT US — UPI PAYMENT (Fixed)
        ================================================ */
     const UPI_ID   = 'itskeshav@upi';
-    const UPI_NAME = 'K4hav';
+    const UPI_NAME = 'ƘҽՏհɑѵ';
     let selectedAmount = '';
 
     /* --- UPI Deep-link builder ---
@@ -1839,7 +2173,7 @@
         const qrDiv = document.getElementById('upi-qr');
         if (!qrDiv) return;
         const amt = selectedAmount ? `&am=${selectedAmount}` : '';
-        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&cu=INR${amt}&tn=${encodeURIComponent('Support K4hav')}`;
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&cu=INR${amt}&tn=${encodeURIComponent('Support ƘҽՏհɑѵ')}`;
 
         /* Use Google Chart API to render QR as <img> — works offline-friendly */
         const encoded = encodeURIComponent(upiUrl);
@@ -1866,8 +2200,513 @@
 
     </script>
     </div><!-- /main-wrap -->
+
+    <!-- ======================================================
+         AI DOUBT SOLVER — K4hav
+    ====================================================== -->
+
+    <!-- Floating Action Button -->
+    <div id="ai-fab-wrap">
+        <div id="ai-fab-label">✦AI</div>
+        <div id="ai-btn-ring-wrap">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring2"></div>
+            <div class="pulse-ring3"></div>
+            <button id="ai-chat-btn" onclick="aiToggle()" title="ƘҽՏհɑѵ AI Doubt Solver">
+                <img src="https://imgs.search.brave.com/qbR0ALWfLL_OWqCoE0JqRgqyIHVGpI-ja2pXrDlFId4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLmdl/dHR5d2FsbHBhcGVy/cy5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMTAvQ2Fy/dG9vbi1CYXRtYW4t/UHJvZmlsZS1QaWN0/dXJlLmpwZw"
+                     alt="AI"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
+                <div class="notif" id="ai-notif">1</div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Panel -->
+    <div id="ai-panel">
+
+        <!-- Header -->
+        <div class="aip-header">
+            <div class="aip-avatar">
+                <img src="https://imgs.search.brave.com/qbR0ALWfLL_OWqCoE0JqRgqyIHVGpI-ja2pXrDlFId4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLmdl/dHR5d2FsbHBhcGVy/cy5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMTAvQ2Fy/dG9vbi1CYXRtYW4t/UHJvZmlsZS1QaWN0/dXJlLmpwZw" 
+                     style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="AI"/>
+                <div class="av-status"></div>
+            </div>
+            <div class="aip-info">
+                <div class="aip-name">AI</div>
+                <div class="aip-sub" id="ai-status-txt">● Online — Ask anything!</div>
+            </div>
+            <button class="aip-provider-badge" onclick="toggleProviderPanel()" id="provider-badge-btn">⚙️ Provider</button>
+            <button id="ai-expand-btn" onclick="aiExpand()" title="Expand chat">⛶</button>
+            <button class="aip-close" onclick="aiToggle()">✕</button>
+        </div>
+
+        <!-- Provider Selector -->
+        <div id="ai-provider-panel">
+            <div class="provider-title">🔑 Choose AI Provider</div>
+            <div class="provider-grid">
+                <div class="provider-card active" onclick="selectProvider('gemini')" id="pcard-gemini">
+                    <div class="pv-check">✓</div>
+                    <div class="pv-icon">✨</div>
+                    <div class="pv-name">Gemini</div>
+                    <span class="pv-badge badge-free">FREE</span>
+                    <div class="pv-desc">Google AI — 1500 req/day free. Best for beginners!</div>
+                </div>
+                <div class="provider-card" onclick="selectProvider('groq')" id="pcard-groq">
+                    <div class="pv-check">✓</div>
+                    <div class="pv-icon">⚡</div>
+                    <div class="pv-name">Groq</div>
+                    <span class="pv-badge badge-free">FREE</span>
+                    <div class="pv-desc">Super fast! Free tier, no card needed.</div>
+                </div>
+                <div class="provider-card" onclick="selectProvider('openai')" id="pcard-openai">
+                    <div class="pv-check">✓</div>
+                    <div class="pv-icon">🤖</div>
+                    <div class="pv-name">OpenAI</div>
+                    <span class="pv-badge badge-paid">PAID</span>
+                    <div class="pv-desc">GPT-4o — Most powerful, needs credits.</div>
+                </div>
+                <div class="provider-card" onclick="selectProvider('cohere')" id="pcard-cohere">
+                    <div class="pv-check">✓</div>
+                    <div class="pv-icon">🌊</div>
+                    <div class="pv-name">Cohere</div>
+                    <span class="pv-badge badge-free">FREE</span>
+                    <div class="pv-desc">Free trial key — great for text doubts.</div>
+                </div>
+                <div class="provider-card" onclick="selectProvider('openrouter')" id="pcard-openrouter">
+                    <div class="pv-check">✓</div>
+                    <div class="pv-icon">🔀</div>
+                    <div class="pv-name">OpenRouter</div>
+                    <span class="pv-badge badge-free">FREE</span>
+                    <div class="pv-desc">100+ models! Many free — Claude, GPT, Llama & more.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Key Area -->
+        <div id="ai-key-area">
+            <div class="key-label" id="key-label-txt">⚡ Setup Gemini (Free)</div>
+            <div class="key-hint" id="key-hint-txt">
+                Go to <a onclick="window.open('https://aistudio.google.com','_blank')">aistudio.google.com</a> → Sign in → <b style="color:#67e8f9">Get API Key</b> → Create → Paste below
+            </div>
+            <div class="key-row">
+                <input type="password" id="ai-api-input" placeholder="Paste API key here..."/>
+                <button id="ai-key-save" onclick="saveKey()">✅ Save</button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="chat-msgs"></div>
+
+        <!-- Quick Chips -->
+        <div class="chips-row" id="chips-row">
+            <span class="qchip" onclick="quickSend(this)">📲 Phone Install</span>
+            <span class="qchip" onclick="quickSend(this)">🔖 Bookmark</span>
+            <span class="qchip" onclick="quickSend(this)">✨ Features kya hain</span>
+            <span class="qchip" onclick="quickSend(this)">Newton Laws 🔭</span>
+            <span class="qchip" onclick="quickSend(this)">Photosynthesis 🌱</span>
+            <span class="qchip" onclick="quickSend(this)">Trigonometry 📐</span>
+            <span class="qchip" onclick="quickSend(this)">Code help 💻</span>
+        </div>
+
+        <!-- Image Preview -->
+        <div id="img-preview-wrap">
+            <div class="img-prev-inner">
+                <img id="img-preview" src="" alt="preview"/>
+                <button id="img-remove" onclick="removeImage()">✕</button>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div id="chat-input-row">
+            <input type="file" id="file-input-hidden" accept="image/*" onchange="handleImageSelect(event)"/>
+            <button id="img-upload-btn" onclick="document.getElementById('file-input-hidden').click()" title="Upload image">📷</button>
+            <textarea id="chat-input-txt" placeholder="Doubt poochho ya baat karo... 😊" rows="1"
+                onkeydown="aiChatKey(event)" oninput="aiResize(this)"></textarea>
+            <button id="chat-send-btn" onclick="aiSend()">➤</button>
+        </div>
+    </div>
+
+    <script>
+    /* ================================================
+       K4HAV AI — MULTI PROVIDER CHATBOT
+    ================================================ */
+
+    /* ---- Website knowledge base (no API needed) ---- */
+    const K4HAV_INFO = {
+      keywords: {
+        'download|homescreen|install|pwa|add to home|phone pe install|mobile install': `📲 **Phone pe install kaise karein (Homescreen):**\n\n**Android Chrome:**\n1. Website kholo browser mein\n2. Right top corner ka 3-dot menu dabao (⋮)\n3. **"Add to Home screen"** ya **"Install app"** click karo\n4. ✅ Done! App icon aajayega\n\n**iPhone Safari:**\n1. Safari mein website kholo\n2. Bottom mein Share button (□↑) dabao\n3. **"Add to Home Screen"** select karo\n4. ✅ Home screen pe icon ready!\n\n**Koi bhi browser:** Address bar ke right mein install icon (⊕) bhi dikh sakta hai — click karo!`,
+
+        'bookmark|save|save website|website save|laptop bookmark': `🔖 **Bookmark/Save kaise karein:**\n\n**Laptop/Desktop:**\n• **Chrome/Edge:** Ctrl+D dabao → Save\n• **Firefox:** Ctrl+D dabao\n• **Safari:** Cmd+D dabao\n• Ya address bar mein ⭐ star icon click karo!\n\n**Mobile Chrome:**\n• 3-dot menu (⋮) → ⭐ Star icon → Save\n\n**Pro tip:** Bookmark ko Bookmarks Bar mein save karo for quick access!`,
+
+        'shortcut|desktop shortcut|windows shortcut': `💻 **Desktop shortcut banao:**\n\n**Chrome:**\n1. Website kholo\n2. 3-dot menu → More tools → **"Create shortcut"**\n3. ✅ Desktop pe icon ready!\n\n**Edge:**\n1. 3-dot menu → Apps → **"Install this site as an app"**`,
+
+        'offline|without internet|bina internet': `📡 **Offline use:**\nYeh website ek baar load karne ke baad kuch features offline bhi kaam karte hain (progress save hoti hai localStorage mein). AI features ke liye internet chahiye.`,
+
+        'progress|save progress|data save|reset': `💾 **Progress kaise save hoti hai:**\nTumhari saari chapter progress browser ke **localStorage** mein automatically save hoti hai.\n\n⚠️ **Warning:** Browser data/cache clear karne se progress delete ho sakti hai!\n\n🔄 **Reset karne ke liye:** Homepage pe **"Reset All Progress"** button dabao.`,
+
+        'feature|kya hai|about|website kya|help|features|kya kya': `🌟 **ƘҽՏհɑѵ Study Tracker - Complete Guide:**\n\n📚 **Streams:**\n• Science (Biology, Maths)\n• Commerce (Accounts, Business, Economics)\n• Arts (History, Geography, Pol. Sci.)\n• Skills (Coding, Video Editing, Cyber Security)\n\n✅ **Features:**\n• Chapter-wise progress tracking\n• Class 11 & 12 both\n• PYQ (Previous Year Questions) tracker\n• Multiple color themes (auto-cycle!)\n• AI Doubt Solver (main hoon! 😊)\n\n🎨 **Themes:** Bottom-right dots se theme change karo ya auto-cycle hoti hai har 12 seconds!`,
+
+        'theme|color|change theme|theme kaise': `🎨 **Theme change kaise karein:**\n• Screen ke **bottom-right** mein colored dots hain\n• Click karo koi bhi dot to change theme\n• Ya themes **automatically** change hoti hain har 12 seconds!\n• Multiple beautiful themes available hain ✨`,
+
+        'subject|subjects|chapters|syllabus': `📖 **Available Subjects:**\n\n🔬 **Science:** Biology, Mathematics\n💼 **Commerce:** Accountancy, Business Studies, Economics\n🎨 **Arts:** History, Geography, Political Science, Psychology, Sociology, English\n💡 **Skills:** Coding, Video Editing, Cybersecurity\n\nHar subject mein Class 11 aur 12 dono ke chapters hain!`,
+
+        'share|friend ko share|link share': `🔗 **Website share karo:**\nBas yeh HTML file share karo kisi ko bhi WhatsApp, email ya USB se — koi internet ki zaroorat nahi file ke liye!\n\nYa apne phone pe install karo aur apna personal study app use karo 📲`,
+
+        'creator|who made|kisne banaya|k4hav|keshav': `👨‍💻 **Creator:**\nYeh website **K4hav (Keshav)** ne banai hai — ek passionate student developer!\n\n💳 **Support karna chahte ho?** UPI: **itskeshav@upi**\n\n🐱 GitHub, 🐦 X, 📸 Instagram — "Help & Support" section mein social links mil jayenge!`,
+
+        'upi|support|donate|payment|pay': `❤️ **Support K4hav:**\nAgar yeh website tumhare kaam aayi toh support kar sakte ho:\n\n💳 **UPI ID:** itskeshav@upi\n\n"Support Us" section mein PhonePe, GPay, Paytm buttons bhi hain aur QR code bhi! 🙏`
+      }
+    };
+
+    function getOfflineReply(text) {
+        const t = text.toLowerCase();
+        for(const [keys, reply] of Object.entries(K4HAV_INFO.keywords)) {
+            const kArr = keys.split('|');
+            if(kArr.some(k => t.includes(k))) return reply;
+        }
+        return null;
+    }
+    const AI_PROVIDERS = {
+        gemini: {
+            name:'Gemini Flash',
+            label:'⚡ Setup Gemini (Free)',
+            hint:'Go to <a onclick="window.open(\'https://aistudio.google.com\',\'_blank\')">aistudio.google.com</a> → Sign in → <b style="color:#67e8f9">Get API Key</b> → Paste below',
+            storageKey:'k4hav_key_gemini',
+            supportsImage: true
+        },
+        groq: {
+            name:'Groq (Fast & Free)',
+            label:'⚡ Setup Groq (Free)',
+            hint:'Go to <a onclick="window.open(\'https://console.groq.com\',\'_blank\')">console.groq.com</a> → Sign up free → API Keys → Create → Paste below',
+            storageKey:'k4hav_key_groq',
+            supportsImage: false
+        },
+        openai: {
+            name:'OpenAI GPT-4o',
+            label:'🤖 Setup OpenAI',
+            hint:'Go to <a onclick="window.open(\'https://platform.openai.com/api-keys\',\'_blank\')">platform.openai.com</a> → API Keys → Create → Paste below (paid)',
+            storageKey:'k4hav_key_openai',
+            supportsImage: true
+        },
+        cohere: {
+            name:'Cohere',
+            label:'🌊 Setup Cohere (Free Trial)',
+            hint:'Go to <a onclick="window.open(\'https://dashboard.cohere.com/api-keys\',\'_blank\')">dashboard.cohere.com</a> → Sign up → API Keys → Copy trial key',
+            storageKey:'k4hav_key_cohere',
+            supportsImage: false
+        },
+        openrouter: {
+            name:'OpenRouter 🔀',
+            label:'🔀 Setup OpenRouter (Free Models!)',
+            hint:'Go to <a onclick="window.open(\'https://openrouter.ai/keys\',\'_blank\')">openrouter.ai/keys</a> → Sign up free → Create Key → Paste below<br><span style="color:#a3e635">Free models: Llama 3.3, Gemma, Mistral, DeepSeek & more!</span>',
+            storageKey:'k4hav_key_openrouter',
+            supportsImage: true
+        }
+    };
+
+    const SYSTEM_PROMPT = `You are ƘҽՏհɑѵ AI, a brilliant and friendly study assistant for Indian Class 11-12 students.
+Help with ALL subjects: Physics, Chemistry, Biology, Maths, Accountancy, Business Studies, Economics, History, Geography, Political Science, English, Hindi, Coding, Video Editing, Cybersecurity.
+Keep answers clear, step-by-step, and student-friendly. Use Hinglish naturally if student prefers.
+Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.`;
+
+    let aiProvider = localStorage.getItem('k4hav_provider') || 'gemini';
+    let chatHistory = [];
+    let isBusy = false;
+    let pendingImageB64 = null;
+    let pendingImageMime = null;
+
+    function spawnSparkles() {
+        const colors = ['#ec4899','#7c3aed','#06b6d4','#a78bfa','#fbbf24','#fff'];
+        for(let i=0;i<12;i++) {
+            const s = document.createElement('div');
+            const ang = (i/12)*360;
+            const dist = 40+Math.random()*35;
+            s.style.cssText=`position:fixed;width:${3+Math.random()*6}px;height:${3+Math.random()*6}px;
+                border-radius:50%;background:${colors[i%colors.length]};pointer-events:none;z-index:9999;
+                left:56px;bottom:136px;
+                animation:sparkleFloat 0.9s ease-out ${i*0.055}s forwards;`;
+            document.body.appendChild(s);
+            setTimeout(()=>s.remove(),1100);
+        }
+    }
+
+    function aiToggle() {
+        const p = document.getElementById('ai-panel');
+        p.classList.toggle('open');
+        if(p.classList.contains('open')) {
+            spawnSparkles();
+            document.getElementById('ai-notif').style.display='none';
+            renderProvider();
+            checkKeyArea();
+            if(chatHistory.length===0) setTimeout(()=>botMsg("Namaste! 👋 Main hoon **ƘҽՏհɑѵ AI** — tumhari personal study buddy!\n\n📚 **Koi bhi doubt** poochho — Math, Science, Commerce, Arts sab!\n📷 **Photo upload** karo question ki\n💬 **Normal baat** bhi kar sakte ho\n⛶ **Expand** karo chat bada karne ke liye\n\n💡 **No API key?** Koi baat nahi! Website ke baare mein poochho — install kaise karein, features, progress — **bina key ke bhi** jawab dunga! 😊\n\nAaj kya poochhna hai? 🚀"), 280);
+        }
+    }
+
+    function toggleProviderPanel() {
+        const pp = document.getElementById('ai-provider-panel');
+        pp.classList.toggle('show');
+    }
+
+    function selectProvider(p) {
+        aiProvider = p;
+        localStorage.setItem('k4hav_provider','k4hav_provider');
+        localStorage.setItem('k4hav_provider', p);
+        document.querySelectorAll('.provider-card').forEach(c=>c.classList.remove('active'));
+        document.getElementById('pcard-'+p).classList.add('active');
+        document.getElementById('ai-provider-panel').classList.remove('show');
+        renderProvider();
+        checkKeyArea();
+    }
+
+    function renderProvider() {
+        const pv = AI_PROVIDERS[aiProvider];
+        document.querySelectorAll('.provider-card').forEach(c=>c.classList.remove('active'));
+        document.getElementById('pcard-'+aiProvider).classList.add('active');
+        document.getElementById('provider-badge-btn').textContent = '⚙️ '+pv.name;
+        document.getElementById('key-label-txt').textContent = pv.label;
+        document.getElementById('key-hint-txt').innerHTML = pv.hint;
+        // image btn
+        const imgBtn = document.getElementById('img-upload-btn');
+        imgBtn.style.opacity = pv.supportsImage ? '1' : '0.35';
+        imgBtn.title = pv.supportsImage ? 'Upload image' : 'Image not supported by this provider';
+    }
+
+    function checkKeyArea() {
+        const key = localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+        document.getElementById('ai-key-area').style.display = key ? 'none' : 'block';
+        if(key) document.getElementById('chat-input-txt').focus();
+    }
+
+    function saveKey() {
+        const v = document.getElementById('ai-api-input').value.trim();
+        if(!v){alert('Key daalo pehle! 😅');return;}
+        localStorage.setItem(AI_PROVIDERS[aiProvider].storageKey, v);
+        document.getElementById('ai-api-input').value='';
+        document.getElementById('ai-key-area').style.display='none';
+        botMsg("🎉 **Key save ho gayi!** Ab poochho koi bhi doubt — Main bilkul ready hoon! 🚀");
+        document.getElementById('chat-input-txt').focus();
+    }
+
+    function getTime(){ return new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }
+
+    const ANIME_AV_MINI = `<img src="https://imgs.search.brave.com/qbR0ALWfLL_OWqCoE0JqRgqyIHVGpI-ja2pXrDlFId4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLmdl/dHR5d2FsbHBhcGVy/cy5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMTAvQ2Fy/dG9vbi1CYXRtYW4t/UHJvZmlsZS1QaWN0/dXJlLmpwZw" style="width:26px;height:26px;object-fit:cover;border-radius:50%;" alt="AI"/>`;
+
+    function botMsg(text, imgSrc) {
+        const c = document.getElementById('chat-msgs');
+        const d = document.createElement('div'); d.className='cm bot';
+        const fmt = text.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+        d.innerHTML=`<div class="bot-av">${ANIME_AV_MINI}</div><div><div class="cm-bub">${imgSrc?`<img class="cm-img" src="${imgSrc}"/>`:''}${fmt}</div><div class="cm-time">${getTime()}</div></div>`;
+        c.appendChild(d); c.scrollTop=c.scrollHeight;
+    }
+
+    function userMsg(text, imgSrc) {
+        const c = document.getElementById('chat-msgs');
+        const d = document.createElement('div'); d.className='cm user';
+        d.innerHTML=`<div><div class="cm-bub">${imgSrc?`<img class="cm-img" src="${imgSrc}"/>`:''}${text?text.replace(/</g,'&lt;'):''}</div><div class="cm-time">${getTime()}</div></div>`;
+        c.appendChild(d); c.scrollTop=c.scrollHeight;
+    }
+
+    function showTyping() {
+        const c=document.getElementById('chat-msgs');
+        const d=document.createElement('div'); d.className='cm bot'; d.id='ai-typing';
+        d.innerHTML=`<div class="bot-av">${ANIME_AV_MINI}</div><div class="cm-bub typing-bub"><span></span><span></span><span></span></div>`;
+        c.appendChild(d); c.scrollTop=c.scrollHeight;
+    }
+    function hideTyping(){ const t=document.getElementById('ai-typing'); if(t)t.remove(); }
+
+    /* ---- Image handling ---- */
+    function handleImageSelect(e) {
+        const file = e.target.files[0]; if(!file) return;
+        const pv = AI_PROVIDERS[aiProvider];
+        if(!pv.supportsImage){alert('Yeh provider image support nahi karta. Gemini ya OpenAI use karo!');return;}
+        const reader=new FileReader();
+        reader.onload=ev=>{
+            pendingImageB64=ev.target.result.split(',')[1];
+            pendingImageMime=file.type;
+            document.getElementById('img-preview').src=ev.target.result;
+            const w=document.getElementById('img-preview-wrap'); w.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+        e.target.value='';
+    }
+    function removeImage(){
+        pendingImageB64=null; pendingImageMime=null;
+        document.getElementById('img-preview-wrap').classList.remove('show');
+        document.getElementById('img-preview').src='';
+    }
+
+    /* ---- Send ---- */
+    async function aiSend() {
+        const inp=document.getElementById('chat-input-txt');
+        const text=inp.value.trim();
+        if((!text && !pendingImageB64)||isBusy) return;
+
+        const imgSnapshot = pendingImageB64 ? 'data:'+pendingImageMime+';base64,'+pendingImageB64 : null;
+        inp.value=''; aiResize(inp);
+        userMsg(text, imgSnapshot);
+        document.getElementById('chips-row').style.display='none';
+        if(imgSnapshot) removeImage();
+
+        // ---- Try offline knowledge base first (no API needed) ----
+        if(!imgSnapshot) {
+            const offlineReply = getOfflineReply(text);
+            if(offlineReply) {
+                showTyping();
+                await new Promise(r=>setTimeout(r, 600));
+                hideTyping();
+                botMsg(offlineReply);
+                return;
+            }
+        }
+
+        const key=localStorage.getItem(AI_PROVIDERS[aiProvider].storageKey);
+        if(!key){
+            botMsg("🔑 **API key nahi hai!**\n\nAI doubts ke liye key chahiye. ⚙️ Provider button dabao aur free key add karo.\n\n💡 **Lekin** website ke baare mein poochh sakte ho bina key ke — jaise:\n• *'Phone pe install kaise karein?'*\n• *'Bookmark kaise karein?'*\n• *'Website ke features kya hain?'*");
+            document.getElementById('ai-key-area').style.display='block';
+            return;
+        }
+
+        isBusy=true; document.getElementById('chat-send-btn').disabled=true;
+        document.getElementById('ai-status-txt').textContent='● Soch rahi hoon...';
+        showTyping();
+
+        try {
+            let reply;
+            if(aiProvider==='gemini') reply=await callGemini(key,text,imgSnapshot);
+            else if(aiProvider==='groq') reply=await callGroq(key,text);
+            else if(aiProvider==='openai') reply=await callOpenAI(key,text,imgSnapshot);
+            else if(aiProvider==='cohere') reply=await callCohere(key,text);
+            else if(aiProvider==='openrouter') reply=await callOpenRouter(key,text,imgSnapshot);
+            hideTyping();
+            chatHistory.push({role:'user',text,img:!!imgSnapshot});
+            chatHistory.push({role:'bot',text:reply});
+            if(chatHistory.length>30) chatHistory=chatHistory.slice(-30);
+            botMsg(reply);
+        } catch(err) {
+            hideTyping();
+            const em=err.message||'Unknown error';
+            if(em.includes('quota')||em.includes('429')||em.includes('exceeded')){
+                botMsg("⚠️ **Quota exceed ho gayi!** Is API key ki limit khatam ho gayi.\n\n👉 Dusra provider try karo (⚙️ Provider button) — **Groq bilkul free hai!**\n\nYa naya key banao.");
+            } else if(em.includes('401')||em.includes('403')||em.includes('invalid')){
+                botMsg("❌ **API Key invalid hai!** Sahi key daalo.\n\n⚙️ Provider button dabao ya page refresh karo.");
+                localStorage.removeItem(AI_PROVIDERS[aiProvider].storageKey);
+                document.getElementById('ai-key-area').style.display='block';
+            } else {
+                botMsg("🌐 **Error:** "+em+"\n\nInternet check karo ya dobara try karo!");
+            }
+        }
+
+        isBusy=false; document.getElementById('chat-send-btn').disabled=false;
+        document.getElementById('ai-status-txt').textContent='● Online — Ask anything!';
+    }
+
+    function aiExpand() {
+        const p = document.getElementById('ai-panel');
+        const btn = document.getElementById('ai-expand-btn');
+        p.classList.toggle('expanded');
+        btn.textContent = p.classList.contains('expanded') ? '⊡' : '⛶';
+        btn.title = p.classList.contains('expanded') ? 'Collapse chat' : 'Expand chat';
+    }
+
+    async function callOpenRouter(key,text,imgB64Full) {
+        const content=[];
+        if(imgB64Full) content.push({type:'image_url',image_url:{url:imgB64Full}});
+        if(text) content.push({type:'text',text});
+        const messages=[
+            {role:'system',content:SYSTEM_PROMPT},
+            ...chatHistory.slice(-10).map(m=>({role:m.role==='user'?'user':'assistant',content:m.text})),
+            {role:'user',content: imgB64Full ? content : text}
+        ];
+        const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer '+key,
+                'HTTP-Referer':'https://k4hav.study',
+                'X-Title':'K4hav Study Tracker'
+            },
+            body:JSON.stringify({
+                model:'meta-llama/llama-3.3-70b-instruct:free',
+                messages, max_tokens:700
+            })
+        });
+        const d=await r.json();
+        if(d.error) throw new Error(d.error.message);
+        return d.choices?.[0]?.message?.content||'Dobara try karo!';
+    }
+
+    /* ---- API Calls ---- */
+    async function callGemini(key,text,imgB64Full) {
+        const parts=[];
+        if(imgB64Full) parts.push({inlineData:{mimeType:imgB64Full.split(';')[0].split(':')[1], data:imgB64Full.split(',')[1]}});
+        if(text) parts.push({text});
+        const history=[
+            {role:'user',parts:[{text:SYSTEM_PROMPT}]},
+            {role:'model',parts:[{text:'Understood! I am Batman AI, ready to help!'}]},
+            ...chatHistory.slice(-10).map(m=>({role:m.role==='user'?'user':'model',parts:[{text:m.text}]})),
+            {role:'user',parts}
+        ];
+        const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
+            method:'POST',headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({contents:history,generationConfig:{temperature:0.8,maxOutputTokens:700}})
+        });
+        const d=await r.json();
+        if(d.error) throw new Error(d.error.message+' '+JSON.stringify(d.error));
+        return d.candidates?.[0]?.content?.parts?.[0]?.text||'Koi response nahi mila, dobara try karo!';
+    }
+
+    async function callGroq(key,text) {
+        const messages=[
+            {role:'system',content:SYSTEM_PROMPT},
+            ...chatHistory.slice(-10).map(m=>({role:m.role==='user'?'user':'assistant',content:m.text})),
+            {role:'user',content:text}
+        ];
+        const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+            method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+            body:JSON.stringify({model:'llama-3.3-70b-versatile',messages,max_tokens:700,temperature:0.8})
+        });
+        const d=await r.json();
+        if(d.error) throw new Error(d.error.message);
+        return d.choices?.[0]?.message?.content||'Dobara try karo!';
+    }
+
+    async function callOpenAI(key,text,imgB64Full) {
+        const content=[];
+        if(imgB64Full) content.push({type:'image_url',image_url:{url:imgB64Full}});
+        if(text) content.push({type:'text',text});
+        const messages=[
+            {role:'system',content:SYSTEM_PROMPT},
+            ...chatHistory.slice(-10).map(m=>({role:m.role==='user'?'user':'assistant',content:m.text})),
+            {role:'user',content}
+        ];
+        const r=await fetch('https://api.openai.com/v1/chat/completions',{
+            method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+            body:JSON.stringify({model:'gpt-4o',messages,max_tokens:700})
+        });
+        const d=await r.json();
+        if(d.error) throw new Error(d.error.message);
+        return d.choices?.[0]?.message?.content||'Dobara try karo!';
+    }
+
+    async function callCohere(key,text) {
+        const chatH=chatHistory.slice(-10).map(m=>({role:m.role==='user'?'USER':'CHATBOT',message:m.text}));
+        const r=await fetch('https://api.cohere.ai/v1/chat',{
+            method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+            body:JSON.stringify({model:'command-r-plus',message:text,chat_history:chatH,preamble:SYSTEM_PROMPT,max_tokens:700})
+        });
+        const d=await r.json();
+        if(d.message) throw new Error(d.message);
+        return d.text||'Dobara try karo!';
+    }
+
+    /* ---- Helpers ---- */
+    function quickSend(el){ document.getElementById('chat-input-txt').value=el.textContent; aiSend(); }
+    function aiChatKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();aiSend();} }
+    function aiResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
+
+    // Init
+    renderProvider();
+    checkKeyArea();
+    </script>
 </body>
 </html>
-
-
-
