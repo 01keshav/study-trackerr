@@ -49,25 +49,17 @@ Go to this website
 https://01keshav.github.io/study-trackerr/
 
 --> Offline
-### Option 1 — Direct Use (Easiest)
+### Option 1 — Online
+1. Website `https://01keshav.github.io/study-trackerr/`
+2. Open it in any browser
+3. Done! Start tracking your chapters ✅
+
+### Option 1 — Direct offline Use 
 1. Download `index.html`
 2. Open it in any browser
 3. Done! Start tracking your chapters ✅
 
-### Option 2 — Install on Phone (PWA)
-**Android Chrome:**
-1. Open the file in Chrome
-2. Tap the 3-dot menu → **"Add to Home Screen"**
-3. It will appear as an app icon on your homescreen
 
-**iPhone Safari:**
-1. Open in Safari
-2. Tap Share (□↑) → **"Add to Home Screen"**
-
-### Option 3 — Bookmark on Laptop
-- Press `Ctrl+D` (Windows/Linux) or `Cmd+D` (Mac) to bookmark
-
----
 
 ## 🤖 AI Setup (Free!)
 
