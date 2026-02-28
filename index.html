@@ -438,62 +438,107 @@
         }
 
         /* --- Floating Button --- */
-        #ai-fab-wrap {
-            position:fixed; bottom:100px; left:22px; z-index:9998;
-            display:flex; flex-direction:column; align-items:center; gap:6px;
+        /* ── FAB DRAG SYSTEM ── */
+        @keyframes labelGlow {
+            0%,100% {
+                box-shadow: 0 0 8px #ec4899, 0 0 18px rgba(236,72,153,0.5);
+                border-color: rgba(236,72,153,0.8);
+                letter-spacing: 0.06em;
+            }
+            33% {
+                box-shadow: 0 0 12px #7c3aed, 0 0 28px rgba(124,58,237,0.6);
+                border-color: rgba(124,58,237,0.9);
+                letter-spacing: 0.14em;
+            }
+            66% {
+                box-shadow: 0 0 10px #06b6d4, 0 0 24px rgba(6,182,212,0.5);
+                border-color: rgba(6,182,212,0.8);
+                letter-spacing: 0.04em;
+            }
         }
-        #ai-fab-label {
-            background:linear-gradient(135deg,var(--c1),#ec4899,var(--c2));
-            color:#fff; font-size:11px; font-weight:800;
-            padding:4px 12px; border-radius:20px; letter-spacing:0.08em;
-            box-shadow:0 2px 16px rgba(236,72,153,0.4); white-space:nowrap;
-            animation:aiBtnFloat 4s ease-in-out infinite;
-            border:1px solid rgba(255,255,255,0.15);
-        }
-        /* wrapper holds rings WITHOUT overflow:hidden */
-        #ai-btn-ring-wrap {
-            position:relative;
-            width:130px; height:130px;
-            display:flex; align-items:center; justify-content:center;
-            animation:aiBtnFloat 4s ease-in-out infinite;
-        }
-        #ai-chat-btn {
-            width:68px; height:68px; border-radius:50%; border:2px solid rgba(236,72,153,0.7); cursor:pointer;
-            background:linear-gradient(135deg,#6d28d9 0%,#ec4899 50%,var(--c2) 100%);
-            display:flex; align-items:center; justify-content:center;
-            box-shadow:0 0 20px rgba(236,72,153,0.6), 0 0 40px rgba(124,58,237,0.4);
-            transition:all 0.3s; position:relative;
-            overflow:hidden; padding:0; flex-shrink:0;
-            z-index:3;
-        }
-        #ai-chat-btn:hover { transform:scale(1.1); }
-        /* rings perfectly centered via absolute + translate */
-        .pulse-ring, .pulse-ring2, .pulse-ring3 {
-            position:absolute;
-            border-radius:50%;
-            pointer-events:none;
-            top:50%; left:50%;
-            transform:translate(-50%,-50%);
-        }
-        .pulse-ring  {
-            width:88px; height:88px;
-            border:2px solid rgba(236,72,153,0.55);
-            animation:rippleExpand 2.1s ease-out infinite 0s;
-        }
-        .pulse-ring2 {
-            width:88px; height:88px;
-            border:2px solid rgba(124,58,237,0.5);
-            animation:rippleExpand 2.1s ease-out infinite 0.7s;
-        }
-        .pulse-ring3 {
-            width:88px; height:88px;
-            border:2px solid rgba(6,182,212,0.4);
-            animation:rippleExpand 2.1s ease-out infinite 1.4s;
+        @keyframes labelBgShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         @keyframes rippleExpand {
-            0%   { width:72px; height:72px; opacity:0.9; }
-            100% { width:130px; height:130px; opacity:0; }
+            0%   { width:58px; height:58px; opacity:0.85; }
+            100% { width:110px; height:110px; opacity:0; }
         }
+
+        #ai-fab-wrap {
+            position:fixed; z-index:9998; left:8px; top:60vh;
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            touch-action:none; user-select:none; will-change:left,top;
+        }
+        #ai-fab-wrap.snap-anim {
+            transition: left 0.45s cubic-bezier(0.34,1.56,0.64,1),
+                        top  0.35s cubic-bezier(0.34,1.56,0.64,1),
+                        opacity 0.3s;
+        }
+        #ai-fab-wrap.offscreen { opacity:0; pointer-events:none; }
+
+        /* Neon label */
+        #ai-fab-label {
+            background: linear-gradient(270deg,#7c3aed,#ec4899,#06b6d4,#a855f7,#7c3aed);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 11px; font-weight: 900;
+            padding: 4px 13px; border-radius: 20px; letter-spacing: 0.06em;
+            border: 1px solid rgba(236,72,153,0.8); white-space: nowrap;
+            pointer-events: none; display: inline-block;
+            animation: labelBgShift 3s ease infinite, labelGlow 3s ease-in-out infinite, aiBtnFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px rgba(236,72,153,0.8));
+        }
+
+        /* Peek tab */
+        #ai-show-tab {
+            position:fixed; z-index:9999; display:none;
+            background:linear-gradient(135deg,var(--c1),#ec4899);
+            color:#fff; font-size:11px; font-weight:800;
+            padding:14px 7px; border-radius:0 14px 14px 0;
+            cursor:pointer; writing-mode:vertical-rl;
+            letter-spacing:0.06em; border:none; outline:none;
+            box-shadow:4px 0 20px rgba(236,72,153,0.55);
+            transition:letter-spacing 0.2s;
+        }
+        #ai-show-tab.r { border-radius:14px 0 0 14px; box-shadow:-4px 0 20px rgba(236,72,153,0.55); }
+        #ai-show-tab:hover { letter-spacing:0.13em; }
+
+        /* Drag states */
+        #ai-btn-ring-wrap {
+            position:relative; width:110px; height:110px;
+            display:flex; align-items:center; justify-content:center;
+            animation:aiBtnFloat 4s ease-in-out infinite;
+            cursor:grab; user-select:none;
+        }
+        #ai-btn-ring-wrap.dragging { animation:none; cursor:grabbing; }
+        #ai-btn-ring-wrap.dragging #ai-chat-btn {
+            transform:scale(1.13);
+            box-shadow:0 0 40px rgba(236,72,153,1), 0 0 80px rgba(124,58,237,0.7) !important;
+        }
+
+        #ai-chat-btn {
+            width:54px; height:54px; border-radius:50%;
+            border:2px solid rgba(236,72,153,0.7);
+            background:linear-gradient(135deg,#6d28d9 0%,#ec4899 50%,var(--c2) 100%);
+            display:flex; align-items:center; justify-content:center;
+            box-shadow:0 0 16px rgba(236,72,153,0.6), 0 0 32px rgba(124,58,237,0.4);
+            transition:box-shadow 0.3s, transform 0.3s;
+            position:relative; overflow:hidden; padding:0; flex-shrink:0; z-index:3;
+            cursor:grab;
+        }
+
+        /* Rings */
+        .pulse-ring,.pulse-ring2,.pulse-ring3 {
+            position:absolute; border-radius:50%; pointer-events:none;
+            top:50%; left:50%; transform:translate(-50%,-50%);
+        }
+        .pulse-ring  { width:58px;height:58px; border:2px solid rgba(236,72,153,0.55); animation:rippleExpand 2.1s ease-out infinite 0s; }
+        .pulse-ring2 { width:58px;height:58px; border:2px solid rgba(124,58,237,0.5);  animation:rippleExpand 2.1s ease-out infinite 0.7s; }
+        .pulse-ring3 { width:58px;height:58px; border:2px solid rgba(6,182,212,0.4);   animation:rippleExpand 2.1s ease-out infinite 1.4s; }
         #ai-chat-btn .pulse-ring {
             position:absolute; inset:-4px; border-radius:50%;
             border:2px solid var(--c1); animation:aiPulseRing 2s ease-out infinite;
@@ -2173,7 +2218,7 @@
         const qrDiv = document.getElementById('upi-qr');
         if (!qrDiv) return;
         const amt = selectedAmount ? `&am=${selectedAmount}` : '';
-        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&cu=INR${amt}&tn=${encodeURIComponent('Support ƘҽՏհɑѵ')}`;
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&cu=INR${amt}&tn=${encodeURIComponent('Support K4hav')}`;
 
         /* Use Google Chart API to render QR as <img> — works offline-friendly */
         const encoded = encodeURIComponent(upiUrl);
@@ -2205,14 +2250,17 @@
          AI DOUBT SOLVER — K4hav
     ====================================================== -->
 
+    <!-- Show tab (appears when button is hidden) -->
+    <button id="ai-show-tab" onclick="aiShowBtn()">🦇 AI</button>
+
     <!-- Floating Action Button -->
     <div id="ai-fab-wrap">
-        <div id="ai-fab-label">✦AI</div>
+        <div id="ai-fab-label">🦇 Batman AI</div>
         <div id="ai-btn-ring-wrap">
             <div class="pulse-ring"></div>
             <div class="pulse-ring2"></div>
             <div class="pulse-ring3"></div>
-            <button id="ai-chat-btn" onclick="aiToggle()" title="ƘҽՏհɑѵ AI Doubt Solver">
+            <button id="ai-chat-btn" title="">
                 <img src="https://imgs.search.brave.com/qbR0ALWfLL_OWqCoE0JqRgqyIHVGpI-ja2pXrDlFId4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLmdl/dHR5d2FsbHBhcGVy/cy5jb20vd3AtY29u/dGVudC91cGxvYWRz/LzIwMjMvMTAvQ2Fy/dG9vbi1CYXRtYW4t/UHJvZmlsZS1QaWN0/dXJlLmpwZw"
                      alt="AI"
                      style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
@@ -2232,7 +2280,7 @@
                 <div class="av-status"></div>
             </div>
             <div class="aip-info">
-                <div class="aip-name">AI</div>
+                <div class="aip-name">🦇 Batman AI</div>
                 <div class="aip-sub" id="ai-status-txt">● Online — Ask anything!</div>
             </div>
             <button class="aip-provider-badge" onclick="toggleProviderPanel()" id="provider-badge-btn">⚙️ Provider</button>
@@ -2352,7 +2400,7 @@
 
         'share|friend ko share|link share': `🔗 **Website share karo:**\nBas yeh HTML file share karo kisi ko bhi WhatsApp, email ya USB se — koi internet ki zaroorat nahi file ke liye!\n\nYa apne phone pe install karo aur apna personal study app use karo 📲`,
 
-        'creator|who made|kisne banaya|k4hav|keshav': `👨‍💻 **Creator:**\nYeh website **K4hav (Keshav)** ne banai hai — ek passionate student developer!\n\n💳 **Support karna chahte ho?** UPI: **itskeshav@upi**\n\n🐱 GitHub, 🐦 X, 📸 Instagram — "Help & Support" section mein social links mil jayenge!`,
+        'creator|who made|kisne banaya|k4hav|ƘҽՏհɑѵ': `👨‍💻 **Creator:**\nYeh website **K4hav (Keshav)** ne banai hai — ek passionate student developer!\n\n💳 **Support karna chahte ho?** UPI: **itskeshav@upi**\n\n🐱 GitHub, 🐦 X, 📸 Instagram — "Help & Support" section mein social links mil jayenge!`,
 
         'upi|support|donate|payment|pay': `❤️ **Support K4hav:**\nAgar yeh website tumhare kaam aayi toh support kar sakte ho:\n\n💳 **UPI ID:** itskeshav@upi\n\n"Support Us" section mein PhonePe, GPay, Paytm buttons bhi hain aur QR code bhi! 🙏`
       }
@@ -2404,7 +2452,7 @@
         }
     };
 
-    const SYSTEM_PROMPT = `You are ƘҽՏհɑѵ AI, a brilliant and friendly study assistant for Indian Class 11-12 students.
+    const SYSTEM_PROMPT = `You are Batman AI, a brilliant and friendly study assistant for Indian Class 11-12 students.
 Help with ALL subjects: Physics, Chemistry, Biology, Maths, Accountancy, Business Studies, Economics, History, Geography, Political Science, English, Hindi, Coding, Video Editing, Cybersecurity.
 Keep answers clear, step-by-step, and student-friendly. Use Hinglish naturally if student prefers.
 Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.`;
@@ -2414,6 +2462,134 @@ Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.
     let isBusy = false;
     let pendingImageB64 = null;
     let pendingImageMime = null;
+
+    /* ════════════════════════════════════════════════════════
+       DRAGGABLE FAB
+       - Hold + drag to move anywhere on screen
+       - Drag past left/right edge → hides, shows peek tab
+       - Tap peek tab → snaps back
+       - Short tap (no drag) → opens chat
+    ════════════════════════════════════════════════════════ */
+    const fabWrap  = document.getElementById('ai-fab-wrap');
+    const ringWrap = document.getElementById('ai-btn-ring-wrap');
+    const showTab  = document.getElementById('ai-show-tab');
+    const BTN_W = 110, EDGE_ZONE = 40;
+
+    let fabL = 8, fabT = window.innerHeight * 0.55;
+    let pointerDownX, pointerDownY, fabDownL, fabDownT;
+    let dragging = false, moved = false;
+
+    function clamp(v, lo, hi){ return Math.max(lo, Math.min(v, hi)); }
+
+    function setPos(l, t, animate) {
+        const maxL = window.innerWidth  - BTN_W + 36;
+        const maxT = window.innerHeight - BTN_W - 8;
+        fabL = clamp(l, -36, maxL);
+        fabT = clamp(t, 8,   maxT);
+        if (animate) {
+            fabWrap.classList.add('snap-anim');
+        } else {
+            fabWrap.classList.remove('snap-anim');
+        }
+        fabWrap.style.left   = fabL + 'px';
+        fabWrap.style.top    = fabT + 'px';
+        fabWrap.style.bottom = 'auto';
+    }
+    setPos(fabL, fabT, false);
+
+    function getPoint(e){ return e.touches ? e.touches[0] : e; }
+
+    /* ── Pointer Down ── */
+    function onFabDown(e) {
+        if (e.button && e.button !== 0) return; // only left click
+        const pt = getPoint(e);
+        pointerDownX = pt.clientX;
+        pointerDownY = pt.clientY;
+        fabDownL = fabL;
+        fabDownT = fabT;
+        dragging = false;
+        moved = false;
+        fabWrap.classList.remove('snap-anim');
+
+        document.addEventListener('mousemove', onFabMove, {passive:false});
+        document.addEventListener('mouseup',   onFabUp);
+        document.addEventListener('touchmove', onFabMove, {passive:false});
+        document.addEventListener('touchend',  onFabUp);
+        document.addEventListener('touchcancel', onFabUp);
+        e.preventDefault();
+    }
+
+    /* ── Pointer Move ── */
+    function onFabMove(e) {
+        const pt = getPoint(e);
+        const dx = pt.clientX - pointerDownX;
+        const dy = pt.clientY - pointerDownY;
+
+        if (!dragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+            dragging = true;
+            moved    = true;
+            ringWrap.classList.add('dragging');
+        }
+        if (!dragging) return;
+        if (e.cancelable) e.preventDefault();
+        setPos(fabDownL + dx, fabDownT + dy, false);
+    }
+
+    /* ── Pointer Up ── */
+    function onFabUp(e) {
+        document.removeEventListener('mousemove', onFabMove);
+        document.removeEventListener('mouseup',   onFabUp);
+        document.removeEventListener('touchmove', onFabMove);
+        document.removeEventListener('touchend',  onFabUp);
+        document.removeEventListener('touchcancel', onFabUp);
+        ringWrap.classList.remove('dragging');
+
+        if (!moved) {
+            // Pure tap → toggle chat
+            aiToggle();
+            return;
+        }
+        dragging = false;
+
+        // Edge snap detection
+        const goLeft  = fabL < EDGE_ZONE - BTN_W / 2;
+        const goRight = fabL > window.innerWidth - BTN_W / 2 - EDGE_ZONE;
+
+        if (goLeft) {
+            setPos(-BTN_W + 12, fabT, true);
+            setTimeout(() => {
+                fabWrap.classList.add('offscreen');
+                showTab.style.display = 'block';
+                showTab.style.top    = clamp(fabT + BTN_W/2 - 28, 10, window.innerHeight-80) + 'px';
+                showTab.style.left   = '0'; showTab.style.right = 'auto';
+                showTab.classList.remove('r');
+                showTab.textContent  = '🦇 AI';
+            }, 430);
+        } else if (goRight) {
+            setPos(window.innerWidth - 12, fabT, true);
+            setTimeout(() => {
+                fabWrap.classList.add('offscreen');
+                showTab.style.display = 'block';
+                showTab.style.top   = clamp(fabT + BTN_W/2 - 28, 10, window.innerHeight-80) + 'px';
+                showTab.style.right = '0'; showTab.style.left = 'auto';
+                showTab.classList.add('r');
+                showTab.textContent = '🦇 AI';
+            }, 430);
+        } else {
+            // Stay in place
+            setPos(fabL, fabT, true);
+        }
+    }
+
+    function aiShowBtn() {
+        showTab.style.display = 'none';
+        fabWrap.classList.remove('offscreen');
+        const fromRight = showTab.classList.contains('r');
+        setPos(fromRight ? window.innerWidth - BTN_W - 8 : 8, fabT, true);
+    }
+
+    ringWrap.addEventListener('mousedown',  onFabDown, {passive:false});
+    ringWrap.addEventListener('touchstart', onFabDown, {passive:false});
 
     function spawnSparkles() {
         const colors = ['#ec4899','#7c3aed','#06b6d4','#a78bfa','#fbbf24','#fff'];
@@ -2438,7 +2614,7 @@ Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.
             document.getElementById('ai-notif').style.display='none';
             renderProvider();
             checkKeyArea();
-            if(chatHistory.length===0) setTimeout(()=>botMsg("Namaste! 👋 Main hoon **ƘҽՏհɑѵ AI** — tumhari personal study buddy!\n\n📚 **Koi bhi doubt** poochho — Math, Science, Commerce, Arts sab!\n📷 **Photo upload** karo question ki\n💬 **Normal baat** bhi kar sakte ho\n⛶ **Expand** karo chat bada karne ke liye\n\n💡 **No API key?** Koi baat nahi! Website ke baare mein poochho — install kaise karein, features, progress — **bina key ke bhi** jawab dunga! 😊\n\nAaj kya poochhna hai? 🚀"), 280);
+            if(chatHistory.length===0) setTimeout(()=>botMsg("Namaste! 👋 Main hoon **🦇 Batman AI** — tumhara personal study buddy!\n\n📚 **Koi bhi doubt** poochho — Math, Science, Commerce, Arts sab!\n📷 **Photo upload** karo question ki\n💬 **Normal baat** bhi kar sakte ho\n⛶ **Expand** karo chat bada karne ke liye\n\n💡 **No API key?** Koi baat nahi! Website ke baare mein poochho — install kaise karein, features, progress — **bina key ke bhi** jawab dunga! 😊\n\nAaj kya poochhna hai? 🚀"), 280);
         }
     }
 
@@ -2642,7 +2818,7 @@ Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.
         if(text) parts.push({text});
         const history=[
             {role:'user',parts:[{text:SYSTEM_PROMPT}]},
-            {role:'model',parts:[{text:'Understood! I am Batman AI, ready to help!'}]},
+            {role:'model',parts:[{text:'Understood! I am K4hav AI, ready to help!'}]},
             ...chatHistory.slice(-10).map(m=>({role:m.role==='user'?'user':'model',parts:[{text:m.text}]})),
             {role:'user',parts}
         ];
