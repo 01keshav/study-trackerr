@@ -114,12 +114,15 @@
         /* ============================
            BASE
            ============================ */
+        html {
+            background: #0a0118;
+        }
         *, *::before, *::after { box-sizing:border-box; }
         body {
             margin:0;
             min-height:100vh;
             overflow-x:hidden;
-            background:var(--bg-deep);
+            background:transparent !important;
             font-family:'Segoe UI', system-ui, sans-serif;
             transition: background 2s ease;
         }
@@ -129,6 +132,7 @@
            ============================ */
         .bg-canvas {
             position:fixed; inset:0; z-index:0; overflow:hidden;
+            background: #0a0010;
             transition: background 2s ease;
         }
         /* animated grid */
@@ -142,14 +146,14 @@
         }
         .orb {
             position:absolute; border-radius:50%;
-            filter:blur(90px); opacity:0.5; pointer-events:none;
+            filter:blur(90px); opacity:0.35; pointer-events:none;
             transition: background 2s ease, width 2s, height 2s;
         }
         .orb-1 { width:550px; height:550px; top:-120px; left:-120px; animation:orbFloat1 14s ease-in-out infinite; }
         .orb-2 { width:450px; height:450px; bottom:-100px; right:-100px; animation:orbFloat2 17s ease-in-out infinite; }
-        .orb-3 { width:320px; height:320px; top:40%; left:50%; animation:orbFloat3 20s ease-in-out infinite; opacity:0.35; }
-        .orb-4 { width:220px; height:220px; top:15%; right:10%; animation:orbFloat4 22s ease-in-out infinite; opacity:0.28; }
-        .orb-5 { width:180px; height:180px; bottom:20%; left:10%; animation:orbFloat5 16s ease-in-out infinite; opacity:0.3; }
+        .orb-3 { width:320px; height:320px; top:40%; left:50%; animation:orbFloat3 20s ease-in-out infinite; opacity:0.25; }
+        .orb-4 { width:220px; height:220px; top:15%; right:10%; animation:orbFloat4 22s ease-in-out infinite; opacity:0.2; }
+        .orb-5 { width:180px; height:180px; bottom:20%; left:10%; animation:orbFloat5 16s ease-in-out infinite; opacity:0.2; }
 
         /* scanlines */
         .scanline {
@@ -203,14 +207,22 @@
         .main-wrap { position:relative; z-index:2; }
 
         /* ============================
+           FULL GLASS TRANSPARENCY OVERRIDE
+           ============================ */
+        .glass, .glass-strong, .subject-card, .skill-card, .tab-button, .back-btn, .reset-btn, .footer, #ai-panel { background: rgba(255,255,255,0.00) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border-color: rgba(255,255,255,0.13) !important; box-shadow: 0 4px 30px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.08) !important; }
+        tr, td, th, tbody, thead, table { background: transparent !important; }
+        /* orbs restored */
+        /* mouse-glow restored */
+
+        /* ============================
            GLASS
            ============================ */
         .glass {
-            background:rgba(10,4,30,0.55);
-            backdrop-filter:blur(16px);
-            -webkit-backdrop-filter:blur(16px);
-            border:1px solid var(--c1-soft);
-            box-shadow:0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+            background:rgba(255,255,255,0.03);
+            backdrop-filter:blur(18px) saturate(180%);
+            -webkit-backdrop-filter:blur(18px) saturate(180%);
+            border:1px solid rgba(255,255,255,0.18);
+            box-shadow:0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.12);
             position:relative; overflow:hidden;
             transition:border-color 2s ease, box-shadow 2s ease;
         }
@@ -221,11 +233,11 @@
             animation:shine 6s ease-in-out infinite; pointer-events:none;
         }
         .glass-strong {
-            background:rgba(15,5,45,0.72);
-            backdrop-filter:blur(20px);
-            -webkit-backdrop-filter:blur(20px);
-            border:1px solid var(--c2-soft);
-            box-shadow:0 4px 24px var(--c1-faint), inset 0 1px 0 rgba(255,255,255,0.07);
+            background:rgba(255,255,255,0.04);
+            backdrop-filter:blur(24px) saturate(200%);
+            -webkit-backdrop-filter:blur(24px) saturate(200%);
+            border:1px solid rgba(255,255,255,0.20);
+            box-shadow:0 4px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.15);
             position:relative; overflow:hidden;
             transition:border-color 2s ease;
         }
@@ -253,42 +265,104 @@
         /* ============================
            BUTTONS
            ============================ */
+        /* ============================
+           SHARED INTERACTIVE HOVER BTN
+           ============================ */
+        .tab-button, .back-btn, .reset-btn {
+            position: relative !important;
+            overflow: hidden !important;
+            cursor: pointer;
+        }
+        /* Default visible label */
+        .tab-button .btn-label,
+        .back-btn  .btn-label,
+        .reset-btn .btn-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.32s cubic-bezier(0.4,0,0.2,1),
+                        opacity   0.26s ease;
+        }
+        /* Hidden hover label — slides in from opposite side */
+        .tab-button .btn-hover-label,
+        .back-btn  .btn-hover-label,
+        .reset-btn .btn-hover-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            z-index: 3;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.32s cubic-bezier(0.4,0,0.2,1),
+                        opacity   0.26s ease;
+        }
+        .tab-button .btn-fill,
+        .back-btn  .btn-fill,
+        .reset-btn .btn-fill {
+            position: absolute;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- TAB BUTTON (purple) --- */
         .tab-button {
-            transition:all 0.3s ease; position:relative; z-index:1;
-            border:1px solid var(--c1-soft) !important;
-            color:var(--text-accent) !important;
+            border: 1px solid var(--c1-soft) !important;
+            color: var(--text-accent) !important;
+            transition: box-shadow 0.3s, border-color 0.3s;
         }
-        .tab-button:hover {
-            transform:translateY(-3px);
-            border-color:var(--c2-soft) !important;
-            box-shadow:0 0 20px var(--c2-faint);
-            color:var(--text-accent2) !important;
-        }
+        .tab-button .btn-hover-label { color: #0a0118; transform: translateY(120%); }
+        .tab-button .btn-fill        { background: var(--c1); }
+        .tab-button:hover             { border-color: var(--c1) !important; box-shadow: 0 0 22px var(--c1-soft); }
+        .tab-button:hover .btn-label  { transform: translateY(-120%); opacity: 0; }
+        .tab-button:hover .btn-hover-label { transform: translateY(0); opacity: 1; }
+        .tab-button:hover .btn-fill   { transform: translate(-50%,-50%) scale(60); }
         .tab-button.active {
-            background:var(--c1-faint) !important;
-            border-color:var(--c1) !important;
-            animation:neonPulse 2s ease-in-out infinite;
-            color:white !important;
+            background: var(--c1-faint) !important;
+            border-color: var(--c1) !important;
+            animation: neonPulse 2s ease-in-out infinite;
+            color: white !important;
         }
+
+        /* --- BACK BUTTON (cyan) --- */
         .back-btn {
-            transition:all 0.3s ease;
-            border:1px solid var(--c2-soft) !important;
-            color:var(--text-accent2) !important;
+            border: 1px solid var(--c2-soft) !important;
+            color: var(--text-accent2) !important;
+            transition: box-shadow 0.3s, border-color 0.3s;
         }
-        .back-btn:hover {
-            transform:translateX(-5px);
-            box-shadow:0 0 16px var(--c2-faint);
-        }
+        .back-btn .btn-hover-label { color: #0a0118; transform: translateX(-110%); }
+        .back-btn .btn-fill        { background: var(--c2); }
+        .back-btn:hover            { border-color: var(--c2) !important; box-shadow: 0 0 22px var(--c2-soft); }
+        .back-btn:hover .btn-label { transform: translateX(110%); opacity: 0; }
+        .back-btn:hover .btn-hover-label { transform: translateX(0); opacity: 1; }
+        .back-btn:hover .btn-fill  { transform: translate(-50%,-50%) scale(60); }
+
+        /* --- RESET BUTTON (red) --- */
         .reset-btn {
-            transition:all 0.3s ease;
-            border:1px solid rgba(239,68,68,0.4) !important;
-            color:#fca5a5 !important;
+            border: 1px solid rgba(239,68,68,0.4) !important;
+            color: #fca5a5 !important;
+            transition: box-shadow 0.3s, border-color 0.3s;
         }
-        .reset-btn:hover {
-            transform:scale(1.05);
-            box-shadow:0 0 20px rgba(239,68,68,0.3);
-            background:rgba(239,68,68,0.15) !important;
-        }
+        .reset-btn .btn-hover-label { color: #fff; transform: translateY(120%); }
+        .reset-btn .btn-fill        { background: #ef4444; }
+        .reset-btn:hover            { border-color: #ef4444 !important; box-shadow: 0 0 22px rgba(239,68,68,0.4); }
+        .reset-btn:hover .btn-label { transform: translateY(-120%); opacity: 0; }
+        .reset-btn:hover .btn-hover-label { transform: translateY(0); opacity: 1; }
+        .reset-btn:hover .btn-fill  { transform: translate(-50%,-50%) scale(60); }
+
+        /* SVG arrow inside back btn */
+        .btn-arrow { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
 
         /* ============================
            CARDS
@@ -362,9 +436,9 @@
            FOOTER
            ============================ */
         .footer {
-            background:rgba(5,2,20,0.85);
-            backdrop-filter:blur(12px);
-            border-top:1px solid var(--c1-soft);
+            background:rgba(255,255,255,0.00);
+            backdrop-filter:blur(16px) saturate(180%);
+            border-top:1px solid rgba(255,255,255,0.12);
             color:var(--text-accent);
             transition:border-color 2s;
         }
@@ -559,10 +633,10 @@
             position:fixed; bottom:190px; left:22px; z-index:9997;
             width:370px; max-width:calc(100vw - 44px);
             border-radius:22px; overflow:hidden;
-            background:rgba(6,2,20,0.94);
-            backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
-            border:1px solid rgba(124,58,237,0.4);
-            box-shadow:0 24px 70px rgba(0,0,0,0.8), 0 0 60px var(--c1-faint), inset 0 1px 0 rgba(255,255,255,0.06);
+            background:rgba(255,255,255,0.00);
+            backdrop-filter:blur(28px) saturate(180%); -webkit-backdrop-filter:blur(28px) saturate(180%);
+            border:1px solid rgba(255,255,255,0.15);
+            box-shadow:0 24px 70px rgba(0,0,0,0.3), 0 0 60px var(--c1-faint), inset 0 1px 0 rgba(255,255,255,0.10);
             display:none; flex-direction:column;
             animation:msgPop 0.3s ease;
             max-height:580px;
@@ -579,7 +653,7 @@
         }
         #ai-panel.expanded #chat-msgs { max-height: calc(100vh - 420px); min-height: 300px; }
         #ai-expand-btn {
-            background:rgba(255,255,255,0.06); border:none; cursor:pointer;
+            background:rgba(255,255,255,0.00); border:none; cursor:pointer;
             width:28px; height:28px; border-radius:50%;
             display:flex; align-items:center; justify-content:center;
             color:#94a3b8; font-size:13px; transition:all 0.2s;
@@ -619,7 +693,7 @@
         .aip-sub  { font-size:10.5px; color:#22c55e; margin-top:1px; }
         .aip-provider-badge {
             font-size:10px; padding:2px 8px; border-radius:20px;
-            background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12);
+            background:rgba(255,255,255,0.00); border:1px solid rgba(255,255,255,0.12);
             color:#94a3b8; cursor:pointer; transition:all 0.2s;
         }
         .aip-provider-badge:hover { border-color:var(--c1); color:var(--text-accent); }
@@ -628,14 +702,14 @@
             width:28px; height:28px; border-radius:50%;
             display:flex; align-items:center; justify-content:center;
             color:#64748b; font-size:14px; transition:all 0.2s;
-            background:rgba(255,255,255,0.05);
+            background:rgba(255,255,255,0.00);
         }
         .aip-close:hover { background:rgba(239,68,68,0.15); color:#fca5a5; }
 
         /* Provider Selector */
         #ai-provider-panel {
             border-bottom:1px solid rgba(124,58,237,0.2);
-            background:rgba(0,0,0,0.3); padding:12px;
+            background:rgba(255,255,255,0.00); padding:12px;
             display:none; flex-direction:column; gap:8px;
         }
         #ai-provider-panel.show { display:flex; }
@@ -643,7 +717,7 @@
         .provider-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
         .provider-card {
             border-radius:12px; padding:10px; cursor:pointer;
-            background:rgba(255,255,255,0.04);
+            background:rgba(255,255,255,0.00);
             border:1.5px solid rgba(255,255,255,0.08);
             transition:all 0.22s; position:relative; overflow:hidden;
         }
@@ -666,7 +740,7 @@
         .key-row { display:flex; gap:6px; }
         #ai-api-input {
             flex:1; padding:8px 10px; border-radius:8px;
-            background:rgba(255,255,255,0.06); border:1px solid rgba(124,58,237,0.3);
+            background:rgba(255,255,255,0.00); border:1px solid rgba(124,58,237,0.3);
             color:white; font-size:12px; outline:none; transition:border-color 0.2s;
         }
         #ai-api-input:focus { border-color:var(--c1); }
@@ -699,7 +773,7 @@
             box-shadow:0 4px 16px var(--c1-soft);
         }
         .cm.bot .cm-bub {
-            background:rgba(255,255,255,0.06); color:#e2d9f3;
+            background:rgba(255,255,255,0.00); color:#e2d9f3;
             border:1px solid rgba(124,58,237,0.2); border-bottom-left-radius:4px;
         }
         .cm-time { font-size:10px; color:#475569; margin-top:3px; }
@@ -752,7 +826,7 @@
         #img-upload-btn:hover { background:rgba(124,58,237,0.25); border-color:var(--c1); }
         #chat-input-txt {
             flex:1; padding:9px 12px; border-radius:12px; resize:none;
-            background:rgba(255,255,255,0.05); border:1px solid rgba(124,58,237,0.3);
+            background:rgba(255,255,255,0.00); border:1px solid rgba(124,58,237,0.3);
             color:white; font-size:13px; outline:none;
             min-height:38px; max-height:80px; font-family:inherit;
             transition:border-color 0.2s;
@@ -769,12 +843,26 @@
         #chat-send-btn:hover { transform:scale(1.12); box-shadow:0 4px 20px var(--c2-soft); }
         #chat-send-btn:disabled { opacity:0.35; transform:none; cursor:not-allowed; }
         #file-input-hidden { display:none; }
+        /* ======== FINAL TRANSPARENT OVERRIDE ======== */
+        .glass, .glass-strong, .glass::before, .glass::after,
+        .glass-strong::before, .glass-strong::after,
+        .subject-card, .skill-card,
+        .tab-button, .back-btn, .reset-btn,
+        .footer, #ai-panel, #ai-panel *,
+        div.glass, div.glass-strong {
+            background: transparent !important;
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 pb-16">
 
     <!-- Animated Background -->
     <div class="bg-canvas" id="bg-canvas">
+        <canvas id="shader-bg" style="position:absolute;inset:0;width:100%;height:100%;opacity:1.0;pointer-events:none;touch-action:none;"></canvas>
         <div class="bg-grid"></div>
         <div class="orb orb-1" id="orb1"></div>
         <div class="orb orb-2" id="orb2"></div>
@@ -805,12 +893,12 @@
         <!-- Main Navigation Tabs -->
         <div class="glass rounded-2xl p-4 mb-6">
             <div class="flex flex-wrap gap-3 justify-center">
-                <button onclick="showPage('page-stream', 'science')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">🔬 Science</button>
-                <button onclick="showPage('page-stream', 'commerce')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💼 Commerce</button>
-                <button onclick="showPage('page-stream', 'arts')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">🎨 Arts</button>
-                <button onclick="showPage('page-skills', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💡 Skills</button>
-                <button onclick="showPage('page-help', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">💬 Help & Support</button>
-                <button onclick="showPage('page-support', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold">❤️ Support Us</button>
+                <button onclick="showPage('page-stream', 'science')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">🔬 Science</span><span class="btn-hover-label">🔬 Science</span><span class="btn-fill"></span></button>
+                <button onclick="showPage('page-stream', 'commerce')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">💼 Commerce</span><span class="btn-hover-label">💼 Commerce</span><span class="btn-fill"></span></button>
+                <button onclick="showPage('page-stream', 'arts')" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">🎨 Arts</span><span class="btn-hover-label">🎨 Arts</span><span class="btn-fill"></span></button>
+                <button onclick="showPage('page-skills', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">💡 Skills</span><span class="btn-hover-label">💡 Skills</span><span class="btn-fill"></span></button>
+                <button onclick="showPage('page-help', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">💬 Help & Support</span><span class="btn-hover-label">💬 Help & Support</span><span class="btn-fill"></span></button>
+                <button onclick="showPage('page-support', null)" class="tab-button glass-strong rounded-xl px-5 py-3 text-white font-semibold"><span class="btn-label">❤️ Support Us</span><span class="btn-hover-label">❤️ Support Us</span><span class="btn-fill"></span></button>
             </div>
         </div>
 
@@ -850,14 +938,14 @@
 
         <!-- Reset -->
         <div class="text-center mb-4">
-            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset All Progress</button>
+            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500"><span class="btn-label">🔄 Reset All Progress</span><span class="btn-hover-label">🔄 Reset All Progress</span><span class="btn-fill"></span></button>
         </div>
     </div>
 
     <!-- ==================== PAGE: STREAM ==================== -->
     <div id="page-stream" class="page max-w-7xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button id="stream-back-btn" onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button id="stream-back-btn" onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 id="stream-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
             </div>
@@ -870,13 +958,13 @@
     <!-- ==================== PAGE: CHAPTERS ==================== -->
     <div id="page-chapters" class="page max-w-7xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button id="chapter-back-btn" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button id="chapter-back-btn" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 id="chapter-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
             </div>
         </div>
         <div class="text-center mb-4">
-            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset All Progress</button>
+            <button onclick="resetProgress()" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500"><span class="btn-label">🔄 Reset All Progress</span><span class="btn-hover-label">🔄 Reset All Progress</span><span class="btn-fill"></span></button>
         </div>
         <div id="chapter-content"></div>
     </div>
@@ -884,7 +972,7 @@
     <!-- ==================== PAGE: SKILLS ==================== -->
     <div id="page-skills" class="page max-w-7xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold text-white">💡 Skills</h2>
             </div>
@@ -918,7 +1006,7 @@
     <!-- ==================== PAGE: CODING ==================== -->
     <div id="page-coding" class="page max-w-7xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold text-white">💻 Coding Roadmaps</h2>
             </div>
@@ -961,7 +1049,7 @@
     <!-- ==================== PAGE: ROADMAP DETAIL ==================== -->
     <div id="page-roadmap" class="page max-w-5xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-coding', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-coding', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 id="roadmap-title" class="text-2xl md:text-3xl font-bold text-white"></h2>
             </div>
@@ -972,7 +1060,7 @@
     <!-- ==================== PAGE: VIDEO EDITING ==================== -->
     <div id="page-video" class="page max-w-5xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold text-white">🎬 Video Editing Roadmap</h2>
 
@@ -986,7 +1074,7 @@
     <!-- ==================== PAGE: CYBER SECURITY ==================== -->
     <div id="page-cyber" class="page max-w-5xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-skills', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold text-white">🔐 Cyber Security Roadmap</h2>
             </div>
@@ -999,75 +1087,459 @@
     <!-- ==================== PAGE: HELP & SUPPORT ==================== -->
     <div id="page-help" class="page max-w-5xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold text-white">💬 Help </h2>
             </div>
         </div>
 
         <div class="glass rounded-2xl p-8 md:p-12 text-center">
-            <p style="color:#a5b4fc;font-size:1.1rem;margin-bottom:2rem;">Need help or have suggestions? Reach out on any platform!</p>
-            <div class="max-w-2xl mx-auto space-y-5">
+            <p style="color:#a5b4fc;font-size:1.1rem;margin-bottom:0.5rem;">Need help or have suggestions? Reach out on any platform!</p>
+            <p style="color:#67e8f9;font-size:0.82rem;margin-bottom:1.5rem;opacity:0.75;">✨ Click any node to connect • Click background to resume orbit</p>
 
-                <!-- GitHub -->
-                <a href="https://github.com/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl">🐙</div>
-                        <div class="text-left">
-                            <h3 class="text-white font-bold text-xl">GitHub</h3>
-                            <p style="color:#94a3b8;font-size:0.85rem;">github.com/k4hav</p>
-                        </div>
-                    </div>
-                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
-                </a>
+            <!-- RADIAL ORBITAL SOCIAL TIMELINE -->
+            <div id="orbital-social-wrap" style="position:relative;width:100%;height:520px;overflow:visible;cursor:default;" onclick="orbResetAll(event)">
 
-                <!-- X (Twitter) -->
-                <a href="https://x.com/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl">🐦</div>
-                        <div class="text-left">
-                            <h3 class="text-white font-bold text-xl">X (Twitter)</h3>
-                            <p style="color:#94a3b8;font-size:0.85rem;">x.com/k4hav</p>
-                        </div>
-                    </div>
-                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
-                </a>
+                <!-- Stars background canvas -->
+                <canvas id="orb-stars-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;border-radius:16px;opacity:0.6;"></canvas>
 
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/k4havv" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl">📸</div>
-                        <div class="text-left">
-                            <h3 class="text-white font-bold text-xl">Instagram</h3>
-                            <p style="color:#94a3b8;font-size:0.85rem;">@k4havv</p>
-                        </div>
-                    </div>
-                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
-                </a>
+                <!-- SVG layer: orbit ring + radar + connection lines -->
+                <svg id="orb-ring-svg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;width:460px;height:460px;overflow:visible;" viewBox="0 0 460 460">
+                    <defs>
+                        <linearGradient id="orbRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7c3aed"/>
+                            <stop offset="40%" stop-color="#06b6d4"/>
+                            <stop offset="100%" stop-color="#7c3aed"/>
+                        </linearGradient>
+                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.9"/>
+                            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.05"/>
+                        </linearGradient>
+                        <radialGradient id="radarSweepGrad" cx="0%" cy="50%" r="100%">
+                            <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.55"/>
+                            <stop offset="60%" stop-color="#7c3aed" stop-opacity="0.15"/>
+                            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+                        </radialGradient>
+                        <clipPath id="orbClip">
+                            <circle cx="230" cy="230" r="187"/>
+                        </clipPath>
+                        <filter id="orbGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="lineGlowFilter">
+                            <feGaussianBlur stdDeviation="2.5" result="b"/>
+                            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="radarGlow" x="-10%" y="-10%" width="120%" height="120%">
+                            <feGaussianBlur stdDeviation="4" result="b"/>
+                            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
 
-                <!-- Telegram -->
-                <a href="https://t.me/k4hav" target="_blank" class="glass-strong rounded-xl p-5 flex items-center justify-between hover:scale-105 transition-all duration-300 group">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl">✈️</div>
-                        <div class="text-left">
-                            <h3 class="text-white font-bold text-xl">Telegram</h3>
-                            <p style="color:#94a3b8;font-size:0.85rem;">t.me/k4hav</p>
-                        </div>
+                    <!-- Outer soft glow halo -->
+                    <circle cx="230" cy="230" r="188" fill="none" stroke="url(#orbRingGrad)" stroke-width="8" opacity="0.07"/>
+                    <!-- Main solid orbit ring -->
+                    <circle cx="230" cy="230" r="185" fill="none" stroke="url(#orbRingGrad)" stroke-width="1.8" opacity="0.85" filter="url(#orbGlow)"/>
+                    <!-- Subtle inner ring -->
+                    <circle cx="230" cy="230" r="168" fill="none" stroke="rgba(124,58,237,0.12)" stroke-width="1"/>
+
+                    <!-- RADAR SWEEP wedge -->
+                    <g id="radar-sweep-group" clip-path="url(#orbClip)">
+                        <path id="radar-wedge" d="" fill="url(#radarSweepGrad)" opacity="0.9" filter="url(#radarGlow)"/>
+                        <!-- Radar leading edge line -->
+                        <line id="radar-line" x1="230" y1="230" x2="415" y2="230"
+                              stroke="#06b6d4" stroke-width="1.5" opacity="0.9" filter="url(#orbGlow)"/>
+                    </g>
+
+                    <!-- Dynamic connection lines (drawn by JS) -->
+                    <g id="orb-conn-lines"></g>
+
+                    <!-- Orbit traveller dots -->
+                    <circle id="orb-traveller" cx="415" cy="230" r="5" fill="#06b6d4" opacity="0.95" filter="url(#orbGlow)"/>
+                    <circle id="orb-traveller-trail" cx="415" cy="230" r="3" fill="#06b6d4" opacity="0.4"/>
+                    <circle id="orb-traveller2" cx="45" cy="230" r="3.5" fill="#7c3aed" opacity="0.75" filter="url(#orbGlow)"/>
+                </svg>
+
+                <!-- Central glowing core -->
+                <div id="orb-core" style="
+                    position:absolute;top:50%;left:50%;
+                    transform:translate(-50%,-50%);
+                    width:72px;height:72px;
+                    border-radius:50%;
+                    background:linear-gradient(135deg,#4c1d95,#7c3aed,#0891b2);
+                    background-size:200% 200%;
+                    animation:orbCoreShift 4s ease infinite, orbCorePulse 2.5s ease-in-out infinite;
+                    display:flex;align-items:center;justify-content:center;
+                    z-index:30;
+                    box-shadow:0 0 0 2px rgba(124,58,237,0.4), 0 0 30px rgba(124,58,237,0.9), 0 0 70px rgba(6,182,212,0.35);
+                    cursor:pointer;
+                ">
+                    <!-- Rotating outer border ring -->
+                    <div style="position:absolute;width:84px;height:84px;border-radius:50%;border:2px solid transparent;border-top-color:rgba(6,182,212,0.8);border-right-color:rgba(124,58,237,0.4);animation:orbRingRotate 3s linear infinite;"></div>
+                    <!-- Ping rings -->
+                    <div style="position:absolute;width:90px;height:90px;border-radius:50%;border:1.5px solid rgba(124,58,237,0.45);animation:orbPing 2.2s ease-out infinite;"></div>
+                    <div style="position:absolute;width:110px;height:110px;border-radius:50%;border:1px solid rgba(6,182,212,0.25);animation:orbPing 2.2s ease-out infinite 0.7s;"></div>
+                    <div style="position:absolute;width:130px;height:130px;border-radius:50%;border:1px solid rgba(124,58,237,0.15);animation:orbPing 2.2s ease-out infinite 1.4s;"></div>
+                    <!-- Message SVG icon -->
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" style="z-index:2;filter:drop-shadow(0 0 8px rgba(255,255,255,0.9));">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(255,255,255,0.95)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+                        <circle cx="8.5" cy="11" r="1.2" fill="rgba(6,182,212,0.9)"/>
+                        <circle cx="12" cy="11" r="1.2" fill="rgba(124,58,237,0.9)"/>
+                        <circle cx="15.5" cy="11" r="1.2" fill="rgba(6,182,212,0.9)"/>
+                    </svg>
+                </div>
+
+                <!-- "Connect with me" floating label -->
+                <div style="position:absolute;top:calc(50% + 52px);left:50%;transform:translateX(-50%);white-space:nowrap;z-index:30;pointer-events:none;">
+                    <span style="font-size:10px;font-weight:700;letter-spacing:0.12em;color:rgba(196,181,253,0.7);text-transform:uppercase;text-shadow:0 0 10px rgba(124,58,237,0.6);">Connect</span>
+                </div>
+
+                <!-- Orbit nodes (positioned via JS) -->
+                <div class="orb-node" data-idx="0" data-url="https://github.com/k4hav" data-title="GitHub" data-sub="github.com/k4hav" data-icon="github" data-color="#c4b5fd" style="position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:20;" onclick="orbNodeClick(event,0)">
+                    <div class="orb-node-inner" style="width:56px;height:56px;border-radius:50%;background:#161b22;border:2px solid rgba(200,180,255,0.7);display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 18px rgba(124,58,237,0.5);">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
                     </div>
-                    <div class="text-2xl group-hover:translate-x-2 transition-transform" style="color:#67e8f9;">→</div>
-                </a>
+                    <div class="orb-node-label" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:0.06em;text-shadow:0 0 10px rgba(124,58,237,0.8);">GitHub</div>
+                    <div class="orb-node-glow" style="position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.3) 0%,transparent 70%);pointer-events:none;animation:orbNodeGlow 2.5s ease-in-out infinite;"></div>
+                </div>
+
+                <div class="orb-node" data-idx="1" data-url="https://x.com/k4hav" data-title="X (Twitter)" data-sub="x.com/k4hav" data-icon="x" data-color="#67e8f9" style="position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:20;" onclick="orbNodeClick(event,1)">
+                    <div class="orb-node-inner" style="width:56px;height:56px;border-radius:50%;background:#000;border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 18px rgba(255,255,255,0.3);">
+                        <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+                    </div>
+                    <div class="orb-node-label" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:#67e8f9;letter-spacing:0.06em;text-shadow:0 0 10px rgba(6,182,212,0.8);">X (Twitter)</div>
+                    <div class="orb-node-glow" style="position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.15) 0%,transparent 70%);pointer-events:none;animation:orbNodeGlow 2.5s ease-in-out infinite 0.6s;"></div>
+                </div>
+
+                <div class="orb-node" data-idx="2" data-url="https://www.instagram.com/k4havv" data-title="Instagram" data-sub="@k4havv" data-icon="instagram" data-color="#f9a8d4" style="position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:20;" onclick="orbNodeClick(event,2)">
+                    <div class="orb-node-inner" style="width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);border:2px solid rgba(253,89,73,0.7);display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 18px rgba(214,36,159,0.5);">
+                        <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </div>
+                    <div class="orb-node-label" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:#f9a8d4;letter-spacing:0.06em;text-shadow:0 0 10px rgba(236,72,153,0.8);">Instagram</div>
+                    <div class="orb-node-glow" style="position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(214,36,159,0.3) 0%,transparent 70%);pointer-events:none;animation:orbNodeGlow 2.5s ease-in-out infinite 1.2s;"></div>
+                </div>
+
+                <div class="orb-node" data-idx="3" data-url="https://t.me/k4hav" data-title="Telegram" data-sub="t.me/k4hav" data-icon="telegram" data-color="#a5f3fc" style="position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:20;" onclick="orbNodeClick(event,3)">
+                    <div class="orb-node-inner" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2aabee,#229ed9);border:2px solid rgba(42,171,238,0.8);display:flex;align-items:center;justify-content:center;transition:all 0.3s;box-shadow:0 0 18px rgba(42,171,238,0.5);">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    </div>
+                    <div class="orb-node-label" style="position:absolute;top:62px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:#a5f3fc;letter-spacing:0.06em;text-shadow:0 0 10px rgba(42,171,238,0.8);">Telegram</div>
+                    <div class="orb-node-glow" style="position:absolute;inset:-12px;border-radius:50%;background:radial-gradient(circle,rgba(42,171,238,0.3) 0%,transparent 70%);pointer-events:none;animation:orbNodeGlow 2.5s ease-in-out infinite 1.8s;"></div>
+                </div>
+
+                <!-- Popup card -->
+                <div id="orb-popup" style="
+                    display:none;
+                    position:absolute;
+                    z-index:100;
+                    width:215px;
+                    background:rgba(255,255,255,0.00);
+                    backdrop-filter:blur(28px);
+                    border:1px solid rgba(124,58,237,0.5);
+                    border-radius:20px;
+                    overflow:hidden;
+                    text-align:center;
+                    transform:translate(-50%,-110%);
+                ">
+                    <!-- Animated rainbow top bar -->
+                    <div id="orb-popup-topbar" style="height:3px;background:linear-gradient(90deg,#7c3aed,#06b6d4,#f9a8d4,#7c3aed);background-size:300%;animation:orbCoreShift 2s linear infinite;"></div>
+                    <!-- Scanline overlay -->
+                    <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:1;border-radius:20px;"></div>
+                    <!-- Animated corner accents -->
+                    <div style="position:absolute;top:8px;left:8px;width:14px;height:14px;border-top:2px solid rgba(124,58,237,0.7);border-left:2px solid rgba(124,58,237,0.7);border-radius:2px 0 0 0;pointer-events:none;z-index:2;"></div>
+                    <div style="position:absolute;top:8px;right:8px;width:14px;height:14px;border-top:2px solid rgba(6,182,212,0.7);border-right:2px solid rgba(6,182,212,0.7);border-radius:0 2px 0 0;pointer-events:none;z-index:2;"></div>
+                    <div style="position:absolute;bottom:8px;left:8px;width:14px;height:14px;border-bottom:2px solid rgba(6,182,212,0.5);border-left:2px solid rgba(6,182,212,0.5);border-radius:0 0 0 2px;pointer-events:none;z-index:2;"></div>
+                    <div style="position:absolute;bottom:8px;right:8px;width:14px;height:14px;border-bottom:2px solid rgba(124,58,237,0.5);border-right:2px solid rgba(124,58,237,0.5);border-radius:0 0 2px 0;pointer-events:none;z-index:2;"></div>
+                    <!-- Glow orb behind icon -->
+                    <div id="orb-popup-glow-bg" style="position:absolute;top:20px;left:50%;transform:translateX(-50%);width:90px;height:90px;border-radius:50%;filter:blur(20px);opacity:0.35;pointer-events:none;z-index:0;"></div>
+                    <div style="padding:18px 18px 20px;position:relative;z-index:3;">
+                        <div id="orb-popup-connector" style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);width:1px;height:14px;background:linear-gradient(to bottom,rgba(124,58,237,0.8),transparent);"></div>
+                        <!-- Icon with ring -->
+                        <div style="position:relative;width:64px;height:64px;margin:0 auto 12px;">
+                            <div id="orb-popup-ring" style="position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(124,58,237,0.5);animation:orbRingRotate 4s linear infinite;border-top-color:rgba(6,182,212,0.9);border-right-color:transparent;"></div>
+                            <div id="orb-popup-ring2" style="position:absolute;inset:-10px;border-radius:50%;border:1px solid rgba(124,58,237,0.2);animation:orbRingRotate 8s linear infinite reverse;border-bottom-color:rgba(6,182,212,0.4);border-left-color:transparent;"></div>
+                            <div id="orb-popup-icon" style="width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:orbNodeGlow 2s ease-in-out infinite;"></div>
+                        </div>
+                        <div id="orb-popup-title" style="font-weight:800;font-size:1rem;color:#f0e6ff;margin-bottom:4px;letter-spacing:0.03em;text-shadow:0 0 12px rgba(196,181,253,0.5);"></div>
+                        <div id="orb-popup-sub" style="font-size:0.72rem;color:#4b5563;margin-bottom:16px;font-family:monospace;letter-spacing:0.06em;"></div>
+                        <a id="orb-popup-btn" href="#" target="_blank" onclick="event.stopPropagation()" style="
+                            display:inline-flex;align-items:center;gap:6px;
+                            padding:9px 24px;border-radius:30px;
+                            background:linear-gradient(135deg,#7c3aed,#06b6d4);
+                            color:#fff;font-size:0.8rem;font-weight:800;
+                            text-decoration:none;letter-spacing:0.08em;
+                            box-shadow:0 4px 20px rgba(124,58,237,0.6),0 0 0 1px rgba(255,255,255,0.1);
+                            transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+                            text-transform:uppercase;
+                            position:relative;overflow:hidden;
+                        " onmouseover="this.style.transform='scale(1.08) translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(6,182,212,0.7),0 0 0 1px rgba(255,255,255,0.15)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(124,58,237,0.6),0 0 0 1px rgba(255,255,255,0.1)'">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                            Open
+                        </a>
+                    </div>
+                </div>
             </div>
+            <!-- END ORBITAL -->
 
-            <div class="mt-10 pt-8 border-t border-white border-opacity-30">
+            <div class="mt-4 pt-6 border-t border-white border-opacity-10">
                 <p style="color:#94a3b8;font-size:0.85rem;">Created with ❤️ to help students track their study preparation</p>
             </div>
         </div>
     </div>
 
+    <style>
+        @keyframes orbCoreShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes orbCorePulse {
+            0%,100% { box-shadow: 0 0 0 2px rgba(124,58,237,0.4), 0 0 30px rgba(124,58,237,0.9), 0 0 70px rgba(6,182,212,0.35); }
+            50%      { box-shadow: 0 0 0 2px rgba(6,182,212,0.5), 0 0 50px rgba(6,182,212,0.9), 0 0 100px rgba(124,58,237,0.45); }
+        }
+        @keyframes orbRingRotate {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes orbPing {
+            0%   { transform:scale(0.85); opacity:0.6; }
+            100% { transform:scale(1.8);  opacity:0; }
+        }
+        @keyframes orbNodeGlow {
+            0%,100% { opacity:0.5; transform:scale(1); }
+            50%      { opacity:1;   transform:scale(1.2); }
+        }
+        @keyframes orbLabelFloat {
+            0%,100% { transform:translateX(-50%) translateY(0px); }
+            50%      { transform:translateX(-50%) translateY(-4px); }
+        }
+        @keyframes orbPopSlideIn {
+            0%   { opacity:0; transform:translate(-50%,-95%) scale(0.7) rotateX(-15deg); filter:blur(4px); }
+            60%  { opacity:1; transform:translate(-50%,-113%) scale(1.04) rotateX(2deg); filter:blur(0); }
+            100% { opacity:1; transform:translate(-50%,-110%) scale(1) rotateX(0deg); filter:blur(0); }
+        }
+        @keyframes orbPopGlowPulse {
+            0%,100% { box-shadow: 0 12px 50px rgba(124,58,237,0.4), 0 0 0 1px rgba(124,58,237,0.4); }
+            50%      { box-shadow: 0 16px 60px rgba(6,182,212,0.45), 0 0 0 1px rgba(6,182,212,0.4); }
+        }
+        @keyframes orbBorderSpin {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        .orb-node-inner {
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, filter 0.3s !important;
+        }
+        .orb-node-inner:hover { transform:scale(1.28) !important; filter:brightness(1.45) saturate(1.3) !important; }
+        .orb-node.active .orb-node-inner {
+            transform:scale(1.45) !important;
+            border-width:3px !important;
+            filter:brightness(1.5) saturate(1.4) !important;
+        }
+        .orb-node-label { animation:orbLabelFloat 3s ease-in-out infinite; pointer-events:none; }
+        #orb-popup.visible { animation: orbPopSlideIn 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards, orbPopGlowPulse 2s ease-in-out infinite 0.45s; }
+        #orb-core { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        #orb-core:hover { transform:translate(-50%,-50%) scale(1.1) !important; }
+    </style>
+
+    <script>
+    (function(){
+        const NODES   = document.querySelectorAll('#orbital-social-wrap .orb-node');
+        const WRAP    = document.getElementById('orbital-social-wrap');
+        const POPUP   = document.getElementById('orb-popup');
+        const LINES   = document.getElementById('orb-conn-lines');
+        const TRAV1   = document.getElementById('orb-traveller');
+        const TRAV1T  = document.getElementById('orb-traveller-trail');
+        const TRAV2   = document.getElementById('orb-traveller2');
+        const RWEDGE  = document.getElementById('radar-wedge');
+        const RLINE   = document.getElementById('radar-line');
+        const SVG_W   = 460, SVG_H = 460;
+        const CX = SVG_W/2, CY = SVG_H/2;
+        const RADIUS  = 185;
+        const TOTAL   = 4;
+        const SWEEP   = 70 * Math.PI/180; // radar sweep arc in radians
+        const NODE_COLORS = ['#c4b5fd','#e2e8f0','#f9a8d4','#a5f3fc'];
+
+        let angle     = 0; // degrees, orbit angle
+        let radarAng  = 0; // radians, radar sweep angle
+        let paused    = false;
+        let activeIdx = -1;
+
+        /* ─── Starfield canvas ─── */
+        const sc = document.getElementById('orb-stars-canvas');
+        const sx = sc.getContext('2d');
+        const STARS = Array.from({length:65}, () => ({
+            x:Math.random(), y:Math.random(),
+            r:Math.random()*1.5+0.3,
+            a:Math.random(), da:(Math.random()*0.007+0.003)*(Math.random()<.5?1:-1),
+            dx:(Math.random()-.5)*0.00018, dy:(Math.random()-.5)*0.00018
+        }));
+        function drawStars(){
+            const w=sc.offsetWidth, h=sc.offsetHeight;
+            if(sc.width!==w||sc.height!==h){ sc.width=w; sc.height=h; }
+            sx.clearRect(0,0,w,h);
+            STARS.forEach(s=>{
+                s.a+=s.da; if(s.a>1||s.a<0)s.da*=-1;
+                s.x=(s.x+s.dx+1)%1; s.y=(s.y+s.dy+1)%1;
+                const hue = Math.random()<.15 ? 180 : 260;
+                sx.beginPath();
+                sx.arc(s.x*w,s.y*h,s.r,0,Math.PI*2);
+                sx.fillStyle=`hsla(${hue},80%,85%,${s.a*0.75})`;
+                sx.fill();
+            });
+        }
+
+        /* ─── Radar wedge path ─── */
+        function updateRadar(rAng){
+            const startAng = rAng - SWEEP;
+            const ex1 = CX + RADIUS * Math.cos(startAng);
+            const ey1 = CY + RADIUS * Math.sin(startAng);
+            const ex2 = CX + RADIUS * Math.cos(rAng);
+            const ey2 = CY + RADIUS * Math.sin(rAng);
+            const d = `M${CX},${CY} L${ex1},${ey1} A${RADIUS},${RADIUS} 0 0,1 ${ex2},${ey2} Z`;
+            if(RWEDGE) RWEDGE.setAttribute('d', d);
+            if(RLINE){ RLINE.setAttribute('x2', ex2); RLINE.setAttribute('y2', ey2); }
+        }
+
+        /* ─── SVG positions ─── */
+        function svgPos(i, ang){
+            const theta = ((i/TOTAL)*2*Math.PI) + (ang*Math.PI/180);
+            return { x: CX + RADIUS*Math.cos(theta), y: CY + RADIUS*Math.sin(theta) };
+        }
+
+        /* ─── Connection lines ─── */
+        function updateLines(aIdx){
+            if(!LINES) return;
+            LINES.innerHTML='';
+            for(let i=0;i<TOTAL;i++){
+                const p=svgPos(i,angle);
+                const active=(aIdx===i);
+                const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+                line.setAttribute('x1',CX); line.setAttribute('y1',CY);
+                line.setAttribute('x2',p.x); line.setAttribute('y2',p.y);
+                line.setAttribute('stroke', active ? NODE_COLORS[i] : 'url(#lineGrad)');
+                line.setAttribute('stroke-width', active ? '2' : '0.8');
+                line.setAttribute('opacity', active ? '0.9' : '0.2');
+                if(active) line.setAttribute('filter','url(#lineGlowFilter)');
+                LINES.appendChild(line);
+                if(active){
+                    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+                    dot.setAttribute('r','4');
+                    dot.setAttribute('fill', NODE_COLORS[i]);
+                    dot.setAttribute('filter','url(#orbGlow)');
+                    const am=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+                    am.setAttribute('dur','1s'); am.setAttribute('repeatCount','indefinite');
+                    am.setAttribute('path',`M${CX},${CY} L${p.x},${p.y}`);
+                    dot.appendChild(am);
+                    LINES.appendChild(dot);
+                }
+            }
+        }
+
+        /* ─── Traveller dots ─── */
+        function updateTravellers(ang){
+            const t1 = ang*Math.PI/180;
+            const t2 = t1+Math.PI;
+            const trailLag = (ang-5)*Math.PI/180;
+            if(TRAV1){ TRAV1.setAttribute('cx',CX+RADIUS*Math.cos(t1)); TRAV1.setAttribute('cy',CY+RADIUS*Math.sin(t1)); }
+            if(TRAV1T){ TRAV1T.setAttribute('cx',CX+RADIUS*Math.cos(trailLag)); TRAV1T.setAttribute('cy',CY+RADIUS*Math.sin(trailLag)); }
+            if(TRAV2){ TRAV2.setAttribute('cx',CX+RADIUS*Math.cos(t2)); TRAV2.setAttribute('cy',CY+RADIUS*Math.sin(t2)); }
+        }
+
+        /* ─── Node positions ─── */
+        function positionNodes(){
+            const cx=WRAP.offsetWidth/2, cy=WRAP.offsetHeight/2;
+            const domR=Math.min(WRAP.offsetWidth,WRAP.offsetHeight)*0.37;
+            NODES.forEach((node,i)=>{
+                const theta=((i/TOTAL)*2*Math.PI)+(angle*Math.PI/180);
+                const x=cx+domR*Math.cos(theta), y=cy+domR*Math.sin(theta);
+                const depth=Math.sin(theta);
+                const scale=0.8+0.3*((depth+1)/2);
+                const opacity=0.5+0.5*((depth+1)/2);
+                const zIdx=Math.round(10+20*((depth+1)/2));
+                node.style.left=x+'px'; node.style.top=y+'px';
+                node.style.zIndex=activeIdx===i?50:zIdx;
+                node.style.opacity=activeIdx===i?1:opacity;
+                if(activeIdx!==i) node.style.transform=`translate(-50%,-50%) scale(${scale})`;
+                node._orbX=x; node._orbY=y;
+            });
+        }
+
+        /* ─── Main loop ─── */
+        function loop(){
+            if(!paused){
+                angle=(angle+0.22)%360;
+                radarAng=(radarAng+0.018)%(2*Math.PI);
+            }
+            positionNodes();
+            updateLines(activeIdx);
+            updateTravellers(angle);
+            updateRadar(radarAng);
+            drawStars();
+            requestAnimationFrame(loop);
+        }
+        loop();
+
+        /* ─── Node click ─── */
+        window.orbNodeClick = function(e, idx){
+            e.stopPropagation();
+            paused=true; activeIdx=idx;
+            NODES.forEach(n=>n.classList.remove('active'));
+            const node=NODES[idx];
+            node.classList.add('active');
+            node.style.transform='translate(-50%,-50%) scale(1.18)';
+
+            // icon
+            const iconEl=document.getElementById('orb-popup-icon');
+            const srcInner=node.querySelector('.orb-node-inner');
+            iconEl.innerHTML=srcInner.innerHTML;
+            iconEl.style.cssText=srcInner.getAttribute('style');
+            iconEl.style.width='64px'; iconEl.style.height='64px';
+            iconEl.style.borderRadius='50%'; iconEl.style.display='flex';
+            iconEl.style.alignItems='center'; iconEl.style.justifyContent='center';
+            iconEl.style.boxShadow=`0 0 30px ${node.dataset.color}aa`;
+
+            // glow bg
+            const glowBg=document.getElementById('orb-popup-glow-bg');
+            if(glowBg) glowBg.style.background=node.dataset.color;
+
+            // topbar
+            const tb=document.getElementById('orb-popup-topbar');
+            if(tb) tb.style.background=`linear-gradient(90deg,${node.dataset.color},#06b6d4,${node.dataset.color})`;
+
+            // ring color
+            const pr=document.getElementById('orb-popup-ring');
+            if(pr) pr.style.borderTopColor=node.dataset.color;
+
+            document.getElementById('orb-popup-title').textContent=node.dataset.title;
+            document.getElementById('orb-popup-sub').textContent=node.dataset.sub;
+            const btn=document.getElementById('orb-popup-btn');
+            btn.href=node.dataset.url;
+            btn.style.background=`linear-gradient(135deg,${node.dataset.color}cc,#06b6d4)`;
+
+            POPUP.style.borderColor=node.dataset.color+'55';
+            POPUP.style.left=node._orbX+'px';
+            POPUP.style.top=node._orbY+'px';
+            POPUP.style.display='block';
+            POPUP.classList.remove('visible');
+            void POPUP.offsetWidth;
+            POPUP.classList.add('visible');
+        };
+
+        window.orbResetAll = function(e){
+            if(e.target.closest('.orb-node')||e.target.closest('#orb-popup')) return;
+            POPUP.style.display='none';
+            POPUP.classList.remove('visible');
+            NODES.forEach(n=>n.classList.remove('active'));
+            activeIdx=-1; paused=false;
+        };
+    })();
+    </script>
+
     <!-- ==================== PAGE: SUPPORT US ==================== -->
     <div id="page-support" class="page max-w-2xl mx-auto">
         <div class="flex items-center gap-4 mb-6">
-            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold">← Back</button>
+            <button onclick="showPage('page-home', null)" class="back-btn glass-strong rounded-xl px-4 py-2 text-white font-semibold"><span class="btn-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-hover-label"><svg class="btn-arrow" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back</span><span class="btn-fill"></span></button>
             <div class="glass-strong rounded-2xl p-4 flex-1 text-center">
                 <h2 class="text-2xl md:text-3xl font-bold" style="color:var(--text-accent);">Support Us🫀</h2>
             </div>
@@ -1719,7 +2191,7 @@
                 </div>
             `).join('')}
             <div class="text-center mt-6">
-                <button onclick="resetStaticSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset Progress</button>
+                <button onclick="resetStaticSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500"><span class="btn-label">🔄 Reset Progress</span><span class="btn-hover-label">🔄 Reset Progress</span><span class="btn-fill"></span></button>
             </div>
         `;
 
@@ -1856,7 +2328,7 @@
             `).join('')}
 
             <div class="text-center mt-6">
-                <button onclick="resetSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500">🔄 Reset Skill Progress</button>
+                <button onclick="resetSkillProgress('${key}')" class="reset-btn glass-strong rounded-xl px-6 py-3 text-white font-semibold hover:bg-red-500"><span class="btn-label">🔄 Reset Skill Progress</span><span class="btn-hover-label">🔄 Reset Skill Progress</span><span class="btn-fill"></span></button>
             </div>
         `;
 
@@ -1995,9 +2467,9 @@
         root.style.setProperty('--text-accent', t.accent);
         root.style.setProperty('--text-accent2', t.accent2);
 
-        document.body.style.background = t.bg;
-        document.getElementById('bg-canvas').style.background =
-            `linear-gradient(135deg, ${t.bg} 0%, ${t.bgMid} 50%, ${t.bg} 100%)`;
+        // body background kept transparent for full glass effect
+        // document.body.style.background = t.bg;
+        // bg-canvas keeps its dark base
 
         const setOrb = (id, colors) => {
             const el = document.getElementById(id);
@@ -2235,7 +2707,7 @@
     function fallbackQR() {
         return `<div style="width:216px;height:216px;display:flex;flex-direction:column;
             align-items:center;justify-content:center;border-radius:12px;
-            border:2px dashed rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);
+            border:2px dashed rgba(255,255,255,0.25);background:rgba(255,255,255,0.00);
             padding:16px;text-align:center;">
             <div style="font-size:36px;margin-bottom:8px;">📲</div>
             <div style="color:#fbbf24;font-weight:700;font-size:14px;">itskeshav@upi</div>
@@ -2884,5 +3356,289 @@ Be warm, encouraging, and use emojis occasionally. Made for K4hav Study Tracker.
     renderProvider();
     checkKeyArea();
     </script>
+
+    <!-- =============================================
+         WebGL SHADER BACKGROUND
+         ============================================= -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('shader-bg');
+        if (!canvas) return;
+
+        const gl = canvas.getContext('webgl2');
+        if (!gl) return;
+
+        const vertSrc = `#version 300 es
+precision highp float;
+in vec4 position;
+void main(){ gl_Position = position; }`;
+
+        const fragSrc = `#version 300 es
+/*
+ * Adapted from Matthias Hurrle (@atzedent)
+ * Recoloured to purple/cyan palette for K4hav Study Tracker
+ */
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+uniform vec2 touch;
+#define FC gl_FragCoord.xy
+#define T time
+#define R resolution
+#define MN min(R.x,R.y)
+
+float rnd(vec2 p){
+    p=fract(p*vec2(12.9898,78.233));
+    p+=dot(p,p+34.56);
+    return fract(p.x*p.y);
+}
+float noise(in vec2 p){
+    vec2 i=floor(p), f=fract(p), u=f*f*(3.-2.*f);
+    return mix(mix(rnd(i),rnd(i+vec2(1,0)),u.x),
+               mix(rnd(i+vec2(0,1)),rnd(i+1.),u.x),u.y);
+}
+float fbm(vec2 p){
+    float t=.0, a=1.; mat2 m=mat2(1.,-.5,.2,1.2);
+    for(int i=0;i<5;i++){ t+=a*noise(p); p*=2.*m; a*=.5; }
+    return t;
+}
+float clouds(vec2 p){
+    float d=1., t=.0;
+    for(float i=.0;i<3.;i++){
+        float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);
+        t=mix(t,d,a); d=a; p*=2./(i+1.);
+    }
+    return t;
+}
+void main(void){
+    vec2 uv=(FC-.5*R)/MN, st=uv*vec2(2.,1.);
+    vec3 col=vec3(0);
+
+    /* mouse-reactive subtle warp */
+    vec2 m=(touch/R)*2.-1.;
+    uv += 0.04*m;
+
+    float bg=clouds(vec2(st.x+T*.4,-st.y));
+    uv*=1.-.3*(sin(T*.18)*.5+.5);
+
+    for(float i=1.;i<12.;i++){
+        uv+=.1*cos(i*vec2(.1+.01*i,.8)+i*i+T*.45+.1*uv.x);
+        vec2 p=uv;
+        float d=length(p);
+
+        /* Purple/cyan palette: vec3(r-bias, g-bias, b-bias) */
+        vec3 palette = cos(sin(i)*vec3(0.3,1.8,2.6))+1.;
+        col+=.00125/d*palette;
+
+        float b=noise(i+p+bg*1.731);
+        col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
+        /* tint nebula fog to deep purple */
+        col=mix(col, vec3(bg*.08, bg*.04, bg*.28), d);
+    }
+
+    /* Final purple-cyan tint pass */
+    col *= vec3(0.72, 0.68, 1.35);
+    col = clamp(col, 0.0, 1.0);
+
+    O=vec4(col,1.0);
+}`;
+
+        let program, vs, fs, buf;
+        let raf;
+        let pointerX = 0, pointerY = 0;
+
+        function compile(shader, src) {
+            gl.shaderSource(shader, src);
+            gl.compileShader(shader);
+        }
+
+        function setup() {
+            vs = gl.createShader(gl.VERTEX_SHADER);
+            fs = gl.createShader(gl.FRAGMENT_SHADER);
+            compile(vs, vertSrc);
+            compile(fs, fragSrc);
+            program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+
+            buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1,-1,-1,1,1,1,-1]), gl.STATIC_DRAW);
+            const pos = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+            program.uRes  = gl.getUniformLocation(program, 'resolution');
+            program.uTime = gl.getUniformLocation(program, 'time');
+            program.uTouch= gl.getUniformLocation(program, 'touch');
+        }
+
+        function resize() {
+            const dpr = Math.max(1, 0.5 * devicePixelRatio);
+            canvas.width  = window.innerWidth  * dpr;
+            canvas.height = window.innerHeight * dpr;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+
+        function loop(now) {
+            gl.clearColor(0,0,0,1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(program);
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.uniform2f(program.uRes, canvas.width, canvas.height);
+            gl.uniform1f(program.uTime, now * 1e-3);
+            gl.uniform2f(program.uTouch, pointerX, pointerY);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            raf = requestAnimationFrame(loop);
+        }
+
+        canvas.addEventListener('pointermove', e => {
+            pointerX = e.clientX;
+            pointerY = canvas.height - e.clientY;
+        });
+
+        setup();
+        resize();
+        loop(0);
+        window.addEventListener('resize', resize);
+    })();
+    </script>
+
+<script>
+/* === GLOW BORDER EFFECT === */
+(function(){
+    var cards = [];
+    var mx = -9999, my = -9999;
+
+    function initCard(el) {
+        if (el.dataset.g) return;
+        el.dataset.g = '1';
+        if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+        var cv = document.createElement('canvas');
+        cv.style.cssText = 'position:absolute;top:-3px;left:-3px;width:calc(100% + 6px);height:calc(100% + 6px);pointer-events:none;z-index:9999;border-radius:inherit;';
+        el.appendChild(cv);
+        cards.push({ el:el, cv:cv, angle:0, tAngle:0 });
+    }
+
+    function draw(cv, el, angle, active) {
+        var dpr = Math.min(devicePixelRatio||1, 2);
+        var r = el.getBoundingClientRect();
+        var W = (r.width+6)*dpr, H = (r.height+6)*dpr;
+        if (cv.width!=Math.round(W)) cv.width=Math.round(W);
+        if (cv.height!=Math.round(H)) cv.height=Math.round(H);
+        var ctx = cv.getContext('2d');
+        ctx.clearRect(0,0,cv.width,cv.height);
+        if (!active) return;
+
+        // Build border path points (rectangle with rounded corners)
+        var rad = 14*dpr, pts=[];
+        var w=cv.width, h=cv.height;
+        var s=1.5; // step
+        // top
+        for(var x=rad;x<=w-rad;x+=s) pts.push([x,0]);
+        // top-right arc
+        for(var a=-Math.PI/2;a<=0;a+=0.08) pts.push([w-rad+Math.cos(a)*rad, rad+Math.sin(a)*rad-rad]);
+        // right
+        for(var y=rad;y<=h-rad;y+=s) pts.push([w,y]);
+        // bottom-right arc
+        for(var a=0;a<=Math.PI/2;a+=0.08) pts.push([w-rad+Math.cos(a)*rad, h-rad+Math.sin(a)*rad]);
+        // bottom
+        for(var x=w-rad;x>=rad;x-=s) pts.push([x,h]);
+        // bottom-left arc
+        for(var a=Math.PI/2;a<=Math.PI;a+=0.08) pts.push([rad+Math.cos(a)*rad, h-rad+Math.sin(a)*rad]);
+        // left
+        for(var y=h-rad;y>=rad;y-=s) pts.push([0,y]);
+        // top-left arc
+        for(var a=Math.PI;a<=3*Math.PI/2;a+=0.08) pts.push([rad+Math.cos(a)*rad, rad+Math.sin(a)*rad]);
+
+        if (!pts.length) return;
+
+        // Find point on border closest to mouse direction
+        var cx=w/2, cy=h/2;
+        var rad2=(angle-90)*Math.PI/180;
+        var dx=Math.cos(rad2), dy=Math.sin(rad2);
+        var best=0, bestD=-Infinity;
+        for(var i=0;i<pts.length;i++){
+            var nx=pts[i][0]-cx, ny=pts[i][1]-cy;
+            var l=Math.sqrt(nx*nx+ny*ny)||1;
+            var d=nx/l*dx+ny/l*dy;
+            if(d>bestD){bestD=d;best=i;}
+        }
+
+        // Arc = 30% of perimeter centered at best point
+        var arcN = Math.floor(pts.length*0.28);
+        var half = Math.floor(arcN/2);
+
+        // Rainbow colors: pink, gold, green, blue
+        var C = [[221,123,187,0],[221,123,187,0.95],[215,159,30,1],[90,146,44,1],[76,120,148,0.95],[76,120,148,0]];
+
+        for(var i=0;i<arcN;i++){
+            var idx=((best-half+i)%pts.length+pts.length)%pts.length;
+            var t=i/(arcN-1);
+            var ci=t*(C.length-1), ci0=Math.floor(ci), ci1=Math.min(ci0+1,C.length-1), ct=ci-ci0;
+            var c0=C[ci0],c1=C[ci1];
+            var rr=c0[0]+(c1[0]-c0[0])*ct;
+            var gg=c0[1]+(c1[1]-c0[1])*ct;
+            var bb=c0[2]+(c1[2]-c0[2])*ct;
+            var aa=c0[3]+(c1[3]-c0[3])*ct;
+            if(aa<0.02) continue;
+            var px=pts[idx][0], py=pts[idx][1];
+            ctx.beginPath();
+            ctx.arc(px,py,2.5*dpr,0,6.28);
+            ctx.fillStyle='rgba('+Math.round(rr)+','+Math.round(gg)+','+Math.round(bb)+','+aa+')';
+            ctx.shadowColor='rgba('+Math.round(rr)+','+Math.round(gg)+','+Math.round(bb)+',0.8)';
+            ctx.shadowBlur=8*dpr;
+            ctx.fill();
+        }
+        // Bright white center dot
+        var cp=pts[best];
+        if(cp){
+            ctx.beginPath();ctx.arc(cp[0],cp[1],3*dpr,0,6.28);
+            ctx.fillStyle='rgba(255,255,255,0.95)';
+            ctx.shadowColor='white';ctx.shadowBlur=12*dpr;ctx.fill();
+        }
+    }
+
+    var raf;
+    function tick(){
+        raf=requestAnimationFrame(tick);
+        for(var i=0;i<cards.length;i++){
+            var c=cards[i];
+            var r=c.el.getBoundingClientRect();
+            if(r.width===0) continue;
+            var cx=r.left+r.width/2, cy=r.top+r.height/2;
+            var near=mx>r.left-80&&mx<r.right+80&&my>r.top-80&&my<r.bottom+80;
+            if(near){
+                var ta=Math.atan2(my-cy,mx-cx)*180/Math.PI+90;
+                var diff=((ta-c.tAngle+180)%360)-180;
+                c.tAngle+=diff;
+                c.angle+=(c.tAngle-c.angle)*0.12;
+                draw(c.cv,c.el,c.angle,true);
+            } else {
+                if(c.cv.getContext) c.cv.getContext('2d').clearRect(0,0,c.cv.width,c.cv.height);
+            }
+        }
+    }
+
+    document.addEventListener('pointermove',function(e){mx=e.clientX;my=e.clientY;},{passive:true});
+
+    function init(){
+        document.querySelectorAll('.glass,.glass-strong,.subject-card,.skill-card,.tab-button,.back-btn,.reset-btn').forEach(initCard);
+    }
+
+    var _sp=window.showPage;
+    if(typeof _sp==='function'){
+        window.showPage=function(){_sp.apply(this,arguments);setTimeout(init,200);};
+    }
+    new MutationObserver(init).observe(document.body,{childList:true,subtree:true});
+
+    if(document.readyState==='loading'){
+        document.addEventListener('DOMContentLoaded',function(){init();requestAnimationFrame(tick);});
+    } else { init();requestAnimationFrame(tick); }
+})();
+</script>
+
 </body>
 </html>
