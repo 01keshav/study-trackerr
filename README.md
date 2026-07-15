@@ -1,7 +1,10 @@
 <div align="center">
 
+<a href="https://study-trackerr.vercel.app">
+  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=28&duration=3000&pause=1000&color=C9A84C&center=true&vCenter=true&width=600&lines=%F0%9F%93%9A+Study+Tracker;Track+%C2%B7+Learn+%C2%B7+Excel;Class+10+to+Graduation;100%25+Free+%C2%B7+No+Login+%C2%B7+Single+Page" alt="Typing SVG" />
+</a>
 
-
+<br/>
 
 ### 📚 **Study Tracker** — *by k4hav*
 #### *Track · Learn · Excel — Class 10 to Graduation*
@@ -12,6 +15,7 @@
 <img src="https://img.shields.io/badge/NO%20LOGIN-NEEDED-8b5cf6?style=for-the-badge&labelColor=0a0a0a" />
 <img src="https://img.shields.io/badge/WORKS-OFFLINE-f59e0b?style=for-the-badge&labelColor=0a0a0a" />
 <img src="https://img.shields.io/badge/MOBILE-FRIENDLY-06b6d4?style=for-the-badge&labelColor=0a0a0a" />
+<img src="https://img.shields.io/badge/SINGLE%20PAGE-APP-ec4899?style=for-the-badge&labelColor=0a0a0a" />
 
 <br/><br/>
 
@@ -19,13 +23,13 @@
 
 <br/>
 
-> **A free, beautiful, browser-based study tracker built for Indian students.**
+> **A free, beautiful, single-page, browser-based study tracker built for Indian students.**
 > Track chapters, revisions & PYQs — from Class 10 all the way to Graduation.
 > No login. No app. No installation. Just open and start studying. 🔥
 
 <br/>
 
----
+![divider](https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif)
 
 </div>
 
@@ -76,23 +80,22 @@
 
 ## 🗂️ Project Structure
 
+> 💡 Now a **true single-page app** — everything lives inside one file. No more juggling multiple HTML pages.
+
 ```
 study-trackerr/
 │
-├── 📄 index.html           ← Home Dashboard
-├── 📄 tenth.html           ← Class 10 / Matriculation
-├── 📄 intermediate.html    ← 11th & 12th / Intermediate
-├── 📄 graduation.html      ← Graduation Courses
-├── 📄 skills.html          ← Skills Roadmaps
-├── 📄 contact.html         ← Contact & Social Links
-├── 📄 support.html         ← Support the Project
-│
-├── 🎨 style.css            ← All shared styles & themes
-├── 🗃️  data.js              ← Chapters, roadmaps, all data
-├── ⚙️  app.js               ← App logic & page navigation
-├── 🤖 ai.js                ← Batman AI chat engine
-└── ✨ effects.js            ← 3D canvas, particles, themes
+└── 📄 index.html   ← Everything — Dashboard, Class 10, 11/12, Graduation,
+                       Skills Roadmaps, Contact, Support, Batman AI —
+                       all sections, styles (CSS) & scripts (JS) inline
+                       in ONE file. Just open it and go. ⚡
 ```
+
+<div align="center">
+
+<img src="https://img.shields.io/badge/⚡%20ONE%20FILE-ZERO%20SETUP-c9a84c?style=for-the-badge&labelColor=0a0a0a" />
+
+</div>
 
 ---
 
@@ -168,7 +171,7 @@ study-trackerr/
 git clone https://github.com/k4hav/study-trackerr.git
 cd study-trackerr
 
-# Open locally — no server needed!
+# Open locally — no server, no build step, no dependencies!
 open index.html
 ```
 
@@ -222,8 +225,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-
----
+![divider](https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif)
 
 <div align="center">
 
